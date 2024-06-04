@@ -36,25 +36,25 @@ void CScene::BuildObjects(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *p
 	pShader->CreateShader(pd3dDevice, m_pd3dGraphicsRootSignature);
 	pShader->CreateShaderVariables(pd3dDevice, pd3dCommandList);
 
-	m_ppObjects[0] = new CGameObject(-10.0f, 3.0f, 20.0f);
+	m_ppObjects[0] = new CGameObject(XMFLOAT3(-10.0f, 3.0f, 20.0f));
 	m_ppObjects[0]->SetMesh(pUfoMesh);
 	m_ppObjects[0]->SetShader(pShader);
 	m_ppObjects[0]->SetColor(XMFLOAT3(0.7f, 0.0f, 0.0f));
 	m_ppObjects[0]->Rotate(0.0, 180.0f, 0.0);
 
-	m_ppObjects[1] = new CGameObject(10.0f, -3.0f, 20.0f);
+	m_ppObjects[1] = new CGameObject(XMFLOAT3(10.0f, -3.0f, 20.0f));
 	m_ppObjects[1]->SetMesh(pUfoMesh);
 	m_ppObjects[1]->SetShader(pShader);
 	m_ppObjects[1]->SetColor(XMFLOAT3(0.7f, 0.0f, 0.0f));
 	m_ppObjects[1]->Rotate(0.0, 180.0f, 0.0);
 
-	m_ppObjects[2] = new CGameObject(1.0f, -6.0f, 20.0f);
+	m_ppObjects[2] = new CGameObject(XMFLOAT3(1.0f, -6.0f, 20.0f));
 	m_ppObjects[2]->SetMesh(pUfoMesh);
 	m_ppObjects[2]->SetShader(pShader);
 	m_ppObjects[2]->SetColor(XMFLOAT3(0.7f, 0.0f, 0.0f));
 	m_ppObjects[2]->Rotate(0.0, 180.0f, 0.0);
 
-	m_ppObjects[3] = new CGameObject(-1.0f, 6.0f, 20.0f);
+	m_ppObjects[3] = new CGameObject(XMFLOAT3(-1.0f, 6.0f, 20.0f));
 	m_ppObjects[3]->SetMesh(pUfoMesh);
 	m_ppObjects[3]->SetShader(pShader);
 	m_ppObjects[3]->SetColor(XMFLOAT3(0.7f, 0.0f, 0.0f));

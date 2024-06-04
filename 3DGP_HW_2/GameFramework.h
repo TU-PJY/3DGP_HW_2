@@ -30,7 +30,7 @@ public:
 
     void ProcessInput();
     void AnimateObjects();
-    void FrameAdvance();
+    void D3D_Main();
 
 	virtual void CreateShaderVariables();
 	virtual void UpdateShaderVariables();

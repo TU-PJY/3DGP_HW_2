@@ -6,17 +6,14 @@
 #include "Object.h"
 #include "Shader.h"
 
-CGameObject::CGameObject(float x, float y, float z)
+CGameObject::CGameObject(XMFLOAT3 Position)
 {
 	m_xmf4x4World = Matrix4x4::Identity();
-	x_pos = x;
-	y_pos = y;
-	z_pos = z;
-
+	EnemyPosition = Position;
 
 	// 음수이면 오른쪽, 양수이면 왼쪽으로 움직이도록 방향 설정
-	if (x_pos < 0) move_direction = 1;
-	else move_direction = -1;
+	if (Position.x < 0) MoveDirection = 1;
+	else MoveDirection = -1;
 }
 
 CGameObject::CGameObject() {
@@ -45,12 +42,12 @@ void CGameObject::SetShader(CShader *pShader)
 
 void CGameObject::Animate(float fTimeElapsed)
 {
-	x_pos += fTimeElapsed * move_direction * 10;
+	EnemyPosition.x += fTimeElapsed * MoveDirection * 10;
 
-	if (x_pos > 20.0 || x_pos < -20.0)
-		move_direction *= -1;
+	if (EnemyPosition.x > 20.0 || EnemyPosition.x < -20.0)
+		MoveDirection *= -1;
 
-	this->SetPosition(x_pos, y_pos, z_pos);
+	this->SetPosition(EnemyPosition);
 }
 
 void CGameObject::CreateShaderVariables(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList)
