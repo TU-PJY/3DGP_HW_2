@@ -25,7 +25,6 @@ public:
 	XMFLOAT3						m_xmf3Color = XMFLOAT3(1.0f, 1.0f, 1.0f);
 
 	// UFO가 움직이는 방향 및 위치
-	//float x_pos, y_pos, z_pos;
 	XMFLOAT3 EnemyPosition{1.0f, 1.0f, 1.0f};
 	int MoveDirection{};
 
