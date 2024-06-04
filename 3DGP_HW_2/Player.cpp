@@ -235,8 +235,8 @@ void CPlayer::Render(ID3D12GraphicsCommandList *pd3dCommandList, CCamera *pCamer
 
 CAirplanePlayer::CAirplanePlayer(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *pd3dCommandList, ID3D12RootSignature *pd3dGraphicsRootSignature)
 {
-	//CMesh *pAirplaneMesh = new CMesh(pd3dDevice, pd3dCommandList, "Models/stealth.obj", true);
-	CMesh *pAirplaneMesh = new CMesh(pd3dDevice, pd3dCommandList, "Models/FlyerPlayership.txt", true);
+	CMesh *pAirplaneMesh = new CMesh(pd3dDevice, pd3dCommandList, "Models/FlyerPlayerShip.bin", false);
+	//CMesh *pAirplaneMesh = new CMesh(pd3dDevice, pd3dCommandList, "Models/FlyerPlayership.txt", true);
 
 	SetMesh(pAirplaneMesh);
 

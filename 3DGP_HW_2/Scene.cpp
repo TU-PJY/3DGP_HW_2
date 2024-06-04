@@ -26,7 +26,7 @@ void CScene::BuildObjects(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *p
 #endif
 #ifdef _WITH_BINARY_MODEL_FILE
 	CMesh *pUfoMesh = new CMesh(pd3dDevice, pd3dCommandList, "Models/UFO.bin", false);
-	CMesh *pFlyerMesh = new CMesh(pd3dDevice, pd3dCommandList, "Models/FlyerPlayership.bin", false);
+	//CMesh *pFlyerMesh = new CMesh(pd3dDevice, pd3dCommandList, "Models/FlyerPlayership.bin", false);
 #endif
 
 	m_nObjects = 4;
@@ -141,15 +141,7 @@ void CScene::AnimateObjects(float fTimeElapsed)
 {
 	for (int j = 0; j < m_nObjects; j++)
 	{
-		// 각 UFO는 각 객체가 가진 방향으로 이동한다
-		m_ppObjects[j]->x_pos += fTimeElapsed * m_ppObjects[j]->move_direction * 10;
-
-		// 10.0 또는 -10.0에 다다르면 이동 방향을 반대로 바꾼다
-		if (m_ppObjects[j]->x_pos > 20.0 || m_ppObjects[j]->x_pos < -20.0)
-			m_ppObjects[j]->move_direction *= -1;
-
-		// UFO를 움직인다
-		m_ppObjects[j]->SetPosition(m_ppObjects[j]->x_pos, m_ppObjects[j]->y_pos, m_ppObjects[j]->z_pos);
+		m_ppObjects[j]->Animate(fTimeElapsed);
 	}
 }
 

@@ -45,6 +45,12 @@ void CGameObject::SetShader(CShader *pShader)
 
 void CGameObject::Animate(float fTimeElapsed)
 {
+	x_pos += fTimeElapsed * move_direction * 10;
+
+	if (x_pos > 20.0 || x_pos < -20.0)
+		move_direction *= -1;
+
+	this->SetPosition(x_pos, y_pos, z_pos);
 }
 
 void CGameObject::CreateShaderVariables(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList)
