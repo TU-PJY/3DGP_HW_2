@@ -53,7 +53,7 @@ void CGameObject::Animate(float fTimeElapsed)
 
 void CGameObject::AnimateShield(XMFLOAT3 position, float fTimeElapsed) {
 	this->SetPosition(position);
-	this->Rotate(0.1, 0.1, 0.1);
+	this->Rotate(50 * fTimeElapsed, 50 * fTimeElapsed, 50 * fTimeElapsed);
 }
 
 void CGameObject::CreateShaderVariables(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList)
