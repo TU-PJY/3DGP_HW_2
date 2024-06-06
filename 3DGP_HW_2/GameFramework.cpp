@@ -392,6 +392,15 @@ LRESULT CALLBACK CGameFramework::OnProcessingWindowMessage(HWND hWnd, UINT nMess
 			OnProcessingMouseMessage(hWnd, nMessageID, wParam, lParam);
             break;
         case WM_KEYDOWN:
+			case 'Z':
+				if(!m_pPlayer->shieldState)
+					m_pPlayer->shieldState = true;
+				else
+					m_pPlayer->shieldState = false;
+				break;
+			break;
+
+
         case WM_KEYUP:
 			OnProcessingKeyboardMessage(hWnd, nMessageID, wParam, lParam);
 			break;

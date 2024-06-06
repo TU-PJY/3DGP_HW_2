@@ -172,7 +172,8 @@ void CScene::Render(ID3D12GraphicsCommandList *pd3dCommandList, CCamera *pCamera
 	for (int j = 0; j < m_nObjects; j++)
 	{
 		if (m_ppObjects[j]) m_ppObjects[j]->Render(pd3dCommandList, pCamera);
-		if (m_pShield) m_pShield->Render(pd3dCommandList, pCamera);
+
+		if (m_pShield && m_pPlayer->shieldState) m_pShield->Render(pd3dCommandList, pCamera);
 	}
 }
 

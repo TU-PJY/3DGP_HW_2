@@ -27,6 +27,7 @@ protected:
 
 public:
 	XMFLOAT3					m_xmf3Position;
+	bool shieldState = true;
 
 	CPlayer();
 	virtual ~CPlayer();
