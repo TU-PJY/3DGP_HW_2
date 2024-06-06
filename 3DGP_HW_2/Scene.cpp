@@ -75,7 +75,7 @@ void CScene::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* p
 	// m_pMissile
 	m_nMissiles = 100;
 	m_pMissile = new CGameObject * [m_nMissiles];
-	
+
 	for (int i = 0; i < m_nMissiles; ++i) {
 		m_pMissile[i] = new CGameObject(XMFLOAT3(0.0, 0.0, 0.0));
 		m_pMissile[i]->SetMesh(pMissileMesh);
@@ -160,7 +160,6 @@ bool CScene::ProcessInput()
 	return(false);
 }
 
-
 void CScene::AnimateObjects(float fTimeElapsed)
 {
 	for (int i = 0; i < m_nObjects; i++)
@@ -168,19 +167,18 @@ void CScene::AnimateObjects(float fTimeElapsed)
 
 	// activateState가 true일 때만 업데이트 한다
 	for (int i = 0; i < m_nMissiles; ++i) {
-		if(m_pMissile[i]->activateState)
+		if (m_pMissile[i]->activateState)
 			m_pMissile[i]->AnimateMissile(fTimeElapsed);
 	}
 
 	m_pShield->AnimateShield(m_pPlayer->m_xmf3Position, fTimeElapsed);
 }
 
-void CScene::PrepareRender(ID3D12GraphicsCommandList * pd3dCommandList) {
+void CScene::PrepareRender(ID3D12GraphicsCommandList* pd3dCommandList) {
 	pd3dCommandList->SetGraphicsRootSignature(m_pd3dGraphicsRootSignature);
 }
 
-
-void CScene::Render(ID3D12GraphicsCommandList * pd3dCommandList, CCamera * pCamera)
+void CScene::Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera* pCamera)
 {
 	pCamera->SetViewportsAndScissorRects(pd3dCommandList);
 	pCamera->UpdateShaderVariables(pd3dCommandList);
@@ -193,8 +191,8 @@ void CScene::Render(ID3D12GraphicsCommandList * pd3dCommandList, CCamera * pCame
 		if (m_pMissile[i]->activateState)
 			m_pMissile[i]->Render(pd3dCommandList, pCamera);
 	}
-		
-	if (m_pShield && m_pPlayer->shieldState) 
+
+	if (m_pShield && m_pPlayer->shieldState)
 		m_pShield->Render(pd3dCommandList, pCamera);
 }
 

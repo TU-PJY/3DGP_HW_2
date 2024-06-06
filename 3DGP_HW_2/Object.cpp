@@ -27,14 +27,14 @@ CGameObject::~CGameObject()
 	if (m_pShader) m_pShader->Release();
 }
 
-void CGameObject::SetMesh(CMesh *pMesh)
+void CGameObject::SetMesh(CMesh* pMesh)
 {
 	if (m_pMesh) m_pMesh->Release();
 	m_pMesh = pMesh;
 	if (m_pMesh) m_pMesh->AddRef();
 }
 
-void CGameObject::SetShader(CShader *pShader)
+void CGameObject::SetShader(CShader* pShader)
 {
 	if (m_pShader) m_pShader->Release();
 	m_pShader = pShader;
@@ -68,7 +68,7 @@ void CGameObject::LookAt(XMFLOAT3& xmf3LookAt, XMFLOAT3& xmf3Up)
 	m_xmf4x4World._21 = xmf4x4View._12; m_xmf4x4World._22 = xmf4x4View._22; m_xmf4x4World._23 = xmf4x4View._32;
 	m_xmf4x4World._31 = xmf4x4View._13; m_xmf4x4World._32 = xmf4x4View._23; m_xmf4x4World._33 = xmf4x4View._33;
 }
- 
+
 // missile
 void CGameObject::AnimateMissile(float fTimeElapsed) {
 	this->Move(m_xmf3MovingDirection, 100 * fTimeElapsed);
@@ -98,7 +98,7 @@ void CGameObject::ReleaseShaderVariables()
 {
 }
 
-void CGameObject::Render(ID3D12GraphicsCommandList *pd3dCommandList, CCamera *pCamera)
+void CGameObject::Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera* pCamera)
 {
 	OnPrepareRender();
 
@@ -180,7 +180,7 @@ void CGameObject::Rotate(float fPitch, float fYaw, float fRoll)
 	m_xmf4x4World = Matrix4x4::Multiply(mtxRotate, m_xmf4x4World);
 }
 
-void CGameObject::Rotate(XMFLOAT3 *pxmf3Axis, float fAngle)
+void CGameObject::Rotate(XMFLOAT3* pxmf3Axis, float fAngle)
 {
 	XMMATRIX mtxRotate = XMMatrixRotationAxis(XMLoadFloat3(pxmf3Axis), XMConvertToRadians(fAngle));
 	m_xmf4x4World = Matrix4x4::Multiply(mtxRotate, m_xmf4x4World);
@@ -190,12 +190,8 @@ void CGameObject::Rotate(XMFLOAT3 *pxmf3Axis, float fAngle)
 //
 CUfoObject::CUfoObject()
 {
-
 }
 
 CUfoObject::~CUfoObject()
 {
-
 }
-
-

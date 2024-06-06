@@ -22,7 +22,7 @@ CCamera::CCamera()
 	m_pPlayer = NULL;
 }
 
-CCamera::CCamera(CCamera *pCamera)
+CCamera::CCamera(CCamera* pCamera)
 {
 	if (pCamera)
 	{
@@ -234,11 +234,11 @@ void CCamera::RegenerateViewMatrix()
 	m_xmFrustumView.Transform(m_xmFrustumWorld, XMLoadFloat4x4(&m_xmf4x4InverseView));
 }
 
-void CCamera::CreateShaderVariables(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *pd3dCommandList)
+void CCamera::CreateShaderVariables(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList)
 {
 }
 
-void CCamera::UpdateShaderVariables(ID3D12GraphicsCommandList *pd3dCommandList)
+void CCamera::UpdateShaderVariables(ID3D12GraphicsCommandList* pd3dCommandList)
 {
 	XMFLOAT4X4 xmf4x4View;
 	XMStoreFloat4x4(&xmf4x4View, XMMatrixTranspose(XMLoadFloat4x4(&m_xmf4x4View)));
@@ -255,7 +255,7 @@ void CCamera::ReleaseShaderVariables()
 {
 }
 
-void CCamera::SetViewportsAndScissorRects(ID3D12GraphicsCommandList *pd3dCommandList)
+void CCamera::SetViewportsAndScissorRects(ID3D12GraphicsCommandList* pd3dCommandList)
 {
 	pd3dCommandList->RSSetViewports(1, &m_d3dViewport);
 	pd3dCommandList->RSSetScissorRects(1, &m_d3dScissorRect);
@@ -264,7 +264,7 @@ void CCamera::SetViewportsAndScissorRects(ID3D12GraphicsCommandList *pd3dCommand
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // CSpaceShipCamera
 
-CSpaceShipCamera::CSpaceShipCamera(CCamera *pCamera) : CCamera(pCamera)
+CSpaceShipCamera::CSpaceShipCamera(CCamera* pCamera) : CCamera(pCamera)
 {
 	m_nMode = SPACESHIP_CAMERA;
 }
@@ -309,7 +309,7 @@ void CSpaceShipCamera::Rotate(float x, float y, float z)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // CFirstPersonCamera
 
-CFirstPersonCamera::CFirstPersonCamera(CCamera *pCamera) : CCamera(pCamera)
+CFirstPersonCamera::CFirstPersonCamera(CCamera* pCamera) : CCamera(pCamera)
 {
 	m_nMode = FIRST_PERSON_CAMERA;
 	if (pCamera)
@@ -358,7 +358,7 @@ void CFirstPersonCamera::Rotate(float x, float y, float z)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // CThirdPersonCamera
 
-CThirdPersonCamera::CThirdPersonCamera(CCamera *pCamera) : CCamera(pCamera)
+CThirdPersonCamera::CThirdPersonCamera(CCamera* pCamera) : CCamera(pCamera)
 {
 	m_nMode = THIRD_PERSON_CAMERA;
 	if (pCamera)
@@ -383,13 +383,13 @@ void CThirdPersonCamera::Update(XMFLOAT3& xmf3LookAt, float fTimeElapsed)
 		XMFLOAT3 xmf3Up = m_pPlayer->GetUpVector();
 		XMFLOAT3 xmf3Look = m_pPlayer->GetLookVector();
 
-		xmf4x4Rotate._11 = xmf3Right.x; 
-		xmf4x4Rotate._12 = xmf3Right.y; 
-		xmf4x4Rotate._13 = xmf3Right.z; 
+		xmf4x4Rotate._11 = xmf3Right.x;
+		xmf4x4Rotate._12 = xmf3Right.y;
+		xmf4x4Rotate._13 = xmf3Right.z;
 
-		xmf4x4Rotate._21 = xmf3Up.x; 
-		xmf4x4Rotate._22 = xmf3Up.y; 
-		xmf4x4Rotate._23 = xmf3Up.z; 
+		xmf4x4Rotate._21 = xmf3Up.x;
+		xmf4x4Rotate._22 = xmf3Up.y;
+		xmf4x4Rotate._23 = xmf3Up.z;
 
 		xmf4x4Rotate._31 = xmf3Look.x;
 		xmf4x4Rotate._32 = xmf3Look.y;

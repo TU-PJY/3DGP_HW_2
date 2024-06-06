@@ -5,7 +5,7 @@
 #include "stdafx.h"
 #include "Mesh.h"
 
-CMesh::CMesh(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *pd3dCommandList, char *pstrFileName, bool bTextFile)
+CMesh::CMesh(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList, char* pstrFileName, bool bTextFile)
 {
 	if (pstrFileName) LoadMeshFromFile(pd3dDevice, pd3dCommandList, pstrFileName, bTextFile);
 }
@@ -26,7 +26,7 @@ CMesh::~CMesh()
 	if (m_pd3dIndexBuffer) m_pd3dIndexBuffer->Release();
 }
 
-void CMesh::ReleaseUploadBuffers() 
+void CMesh::ReleaseUploadBuffers()
 {
 	if (m_pd3dPositionUploadBuffer) m_pd3dPositionUploadBuffer->Release();
 	if (m_pd3dNormalUploadBuffer) m_pd3dNormalUploadBuffer->Release();
@@ -39,7 +39,7 @@ void CMesh::ReleaseUploadBuffers()
 	m_pd3dIndexUploadBuffer = NULL;
 };
 
-void CMesh::Render(ID3D12GraphicsCommandList *pd3dCommandList)
+void CMesh::Render(ID3D12GraphicsCommandList* pd3dCommandList)
 {
 	pd3dCommandList->IASetPrimitiveTopology(m_d3dPrimitiveTopology);
 	pd3dCommandList->IASetVertexBuffers(m_nSlot, m_nVertexBufferViews, m_pd3dVertexBufferViews);
@@ -54,7 +54,7 @@ void CMesh::Render(ID3D12GraphicsCommandList *pd3dCommandList)
 	}
 }
 
-void CMesh::LoadMeshFromFile(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *pd3dCommandList, char *pstrFileName, bool bTextFile)
+void CMesh::LoadMeshFromFile(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList, char* pstrFileName, bool bTextFile)
 {
 	char pstrToken[64] = { '\0' };
 
@@ -161,4 +161,3 @@ void CMesh::LoadMeshFromFile(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList
 	m_d3dIndexBufferView.Format = DXGI_FORMAT_R32_UINT;
 	m_d3dIndexBufferView.SizeInBytes = sizeof(UINT) * m_nIndices;
 }
-

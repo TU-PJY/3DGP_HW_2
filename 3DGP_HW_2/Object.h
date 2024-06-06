@@ -18,14 +18,14 @@ public:
 
 public:
 	XMFLOAT4X4						m_xmf4x4World;
-	CMesh							*m_pMesh = NULL;
+	CMesh* m_pMesh = NULL;
 
-	CShader							*m_pShader = NULL;
+	CShader* m_pShader = NULL;
 
 	XMFLOAT3						m_xmf3Color = XMFLOAT3(1.0f, 1.0f, 1.0f);
 
 	// UFO가 움직이는 방향 및 위치
-	XMFLOAT3 EnemyPosition{1.0f, 1.0f, 1.0f};
+	XMFLOAT3 EnemyPosition{ 1.0f, 1.0f, 1.0f };
 	int MoveDirection{};
 
 	// 미사일이 출력되고 업데이트 되는 여부
@@ -45,8 +45,8 @@ public:
 
 	void LookAt(XMFLOAT3& xmf3LookAt, XMFLOAT3& xmf3Up);
 
-	void SetMesh(CMesh *pMesh);
-	void SetShader(CShader *pShader);
+	void SetMesh(CMesh* pMesh);
+	void SetShader(CShader* pShader);
 
 	virtual void CreateShaderVariables(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList);
 	virtual void UpdateShaderVariables(ID3D12GraphicsCommandList* pd3dCommandList);
@@ -57,7 +57,7 @@ public:
 	void CGameObject::AnimateMissile(float fTimeElapsed);
 
 	virtual void OnPrepareRender() { }
-	virtual void Render(ID3D12GraphicsCommandList *pd3dCommandList, CCamera *pCamera = NULL);
+	virtual void Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera* pCamera = NULL);
 
 	virtual void ReleaseUploadBuffers();
 
@@ -76,7 +76,7 @@ public:
 	void MoveForward(float fDistance = 1.0f);
 
 	void Rotate(float fPitch = 10.0f, float fYaw = 10.0f, float fRoll = 10.0f);
-	void Rotate(XMFLOAT3 *pxmf3Axis, float fAngle);
+	void Rotate(XMFLOAT3* pxmf3Axis, float fAngle);
 
 	void CGameObject::InputPlayerPosition(XMFLOAT3 position);
 };
@@ -87,4 +87,3 @@ public:
 	CUfoObject();
 	virtual ~CUfoObject();
 };
-
