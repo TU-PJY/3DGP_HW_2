@@ -209,9 +209,9 @@ void CScene::CreateMissile() {
 
 			m_pMissile[i]->m_xmf4x4World = Matrix4x4::Identity();
 
+			m_pMissile[i]->LookAt(xmf3Direction, xmf3Up);
 			m_pMissile[i]->SetPosition(xmf3FirePosition);
 			m_pMissile[i]->SetMovingDirection(xmf3Direction);
-			m_pMissile[i]->LookAt(xmf3Direction, xmf3Up);
 
 			m_pMissile[i]->moveDistance = 0;
 			m_pMissile[i]->activateState = true;
