@@ -9,8 +9,10 @@
 class CScene
 {
 public:
-    CScene();
+	CScene();
     ~CScene();
+
+	void InputPlayer(CPlayer* player);
 
 	bool OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam);
 	bool OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam);
@@ -32,5 +34,7 @@ protected:
 	ID3D12RootSignature			*m_pd3dGraphicsRootSignature = NULL;
 
 	CGameObject					**m_ppObjects = 0;
+	CGameObject                 *m_pShield = 0;
+	CPlayer                     *m_pPlayer = 0;
 	int							m_nObjects = 0;
 };

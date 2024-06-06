@@ -436,6 +436,10 @@ void CGameFramework::BuildObjects()
 
 	CAirplanePlayer *pAirplanePlayer = new CAirplanePlayer(m_pd3dDevice, m_pd3dCommandList, m_pScene->GetGraphicsRootSignature());
 	m_pPlayer = pAirplanePlayer;
+
+	m_pScene->InputPlayer(m_pPlayer);
+
+
 	m_pCamera = m_pPlayer->GetCamera();
 
 	m_pd3dCommandList->Close();

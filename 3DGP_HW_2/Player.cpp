@@ -209,7 +209,7 @@ void CPlayer::Render(ID3D12GraphicsCommandList *pd3dCommandList, CCamera *pCamer
 
 CAirplanePlayer::CAirplanePlayer(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *pd3dCommandList, ID3D12RootSignature *pd3dGraphicsRootSignature)
 {
-	CMesh *pAirplaneMesh = new CMesh(pd3dDevice, pd3dCommandList, "Models/default.bin", false);
+	CMesh *pAirplaneMesh = new CMesh(pd3dDevice, pd3dCommandList, "Models/LOD0.bin", false);
 
 	SetMesh(pAirplaneMesh);
 
@@ -236,7 +236,7 @@ void CAirplanePlayer::OnPrepareRender()
 	CPlayer::OnPrepareRender();
 }
 
-CCamera *CAirplanePlayer::ChangeCamera(DWORD nNewCameraMode, float fTimeElapsed)
+CCamera* CAirplanePlayer::ChangeCamera(DWORD nNewCameraMode, float fTimeElapsed)
 {
 	DWORD nCurrentCameraMode = (m_pCamera) ? m_pCamera->GetMode() : 0x00;
 	if (nCurrentCameraMode == nNewCameraMode) return(m_pCamera);

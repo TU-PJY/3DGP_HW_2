@@ -3,7 +3,7 @@
 //-----------------------------------------------------------------------------
 
 #pragma once
-
+#include <string>
 #include "Mesh.h"
 #include "Camera.h"
 
@@ -36,6 +36,8 @@ public:
 	virtual void ReleaseShaderVariables();
 
 	virtual void Animate(float fTimeElapsed);
+	void AnimateShield(XMFLOAT3 position, float fTimeElapsed);
+
 	virtual void OnPrepareRender() { }
 	virtual void Render(ID3D12GraphicsCommandList *pd3dCommandList, CCamera *pCamera = NULL);
 
@@ -57,6 +59,8 @@ public:
 
 	void Rotate(float fPitch = 10.0f, float fYaw = 10.0f, float fRoll = 10.0f);
 	void Rotate(XMFLOAT3 *pxmf3Axis, float fAngle);
+
+	void CGameObject::InputPlayerPosition(XMFLOAT3 position);
 };
 
 class CUfoObject : public CGameObject

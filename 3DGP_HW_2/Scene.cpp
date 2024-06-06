@@ -4,13 +4,19 @@
 
 #include "stdafx.h"
 #include "Scene.h"
+#include "Player.h"
 
 CScene::CScene()
 {
 }
 
+
 CScene::~CScene()
 {
+}
+
+void CScene::InputPlayer(CPlayer* player) {
+	m_pPlayer = player;
 }
 
 //#define _WITH_TEXT_MODEL_FILE
@@ -26,11 +32,12 @@ void CScene::BuildObjects(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *p
 #endif
 #ifdef _WITH_BINARY_MODEL_FILE
 	CMesh *pUfoMesh = new CMesh(pd3dDevice, pd3dCommandList, "Models/UFO.bin", false);
-	//CMesh *pFlyerMesh = new CMesh(pd3dDevice, pd3dCommandList, "Models/FlyerPlayership.bin", false);
+	CMesh* pShieldMesh = new CMesh(pd3dDevice, pd3dCommandList, "Models/shield.txt", true);
 #endif
 
 	m_nObjects = 4;
 	m_ppObjects = new CGameObject*[m_nObjects];
+	//m_pShield = new CGameObject();
 
 	CPseudoLightingShader *pShader = new CPseudoLightingShader();
 	pShader->CreateShader(pd3dDevice, m_pd3dGraphicsRootSignature);
@@ -59,6 +66,11 @@ void CScene::BuildObjects(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *p
 	m_ppObjects[3]->SetShader(pShader);
 	m_ppObjects[3]->SetColor(XMFLOAT3(0.7f, 0.0f, 0.0f));
 	m_ppObjects[3]->Rotate(0.0, 180.0f, 0.0);
+
+	m_pShield = new CGameObject(XMFLOAT3(0.0, 0.0, 0.0));
+	m_pShield->SetMesh(pShieldMesh);
+	m_pShield->SetShader(pShader);
+	m_pShield->SetColor(XMFLOAT3(0.0, 0.0, 1.0));
 }
 
 ID3D12RootSignature *CScene::CreateGraphicsRootSignature(ID3D12Device *pd3dDevice)
@@ -143,6 +155,8 @@ void CScene::AnimateObjects(float fTimeElapsed)
 	{
 		m_ppObjects[j]->Animate(fTimeElapsed);
 	}
+
+	m_pShield->AnimateShield(m_pPlayer->m_xmf3Position, fTimeElapsed);
 }
 
 void CScene::PrepareRender(ID3D12GraphicsCommandList* pd3dCommandList)
@@ -158,6 +172,7 @@ void CScene::Render(ID3D12GraphicsCommandList *pd3dCommandList, CCamera *pCamera
 	for (int j = 0; j < m_nObjects; j++)
 	{
 		if (m_ppObjects[j]) m_ppObjects[j]->Render(pd3dCommandList, pCamera);
+		if (m_pShield) m_pShield->Render(pd3dCommandList, pCamera);
 	}
 }
 

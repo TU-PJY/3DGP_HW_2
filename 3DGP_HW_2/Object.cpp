@@ -5,6 +5,7 @@
 #include "stdafx.h"
 #include "Object.h"
 #include "Shader.h"
+#include "Player.h"
 
 CGameObject::CGameObject(XMFLOAT3 Position)
 {
@@ -48,6 +49,11 @@ void CGameObject::Animate(float fTimeElapsed)
 		MoveDirection *= -1;
 
 	this->SetPosition(EnemyPosition);
+}
+
+void CGameObject::AnimateShield(XMFLOAT3 position, float fTimeElapsed) {
+	this->SetPosition(position);
+	this->Rotate(0.1, 0.1, 0.1);
 }
 
 void CGameObject::CreateShaderVariables(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList)

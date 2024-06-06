@@ -6,7 +6,6 @@
 class CPlayer : public CGameObject
 {
 protected:
-	XMFLOAT3					m_xmf3Position;
 	XMFLOAT3					m_xmf3Right;
 	XMFLOAT3					m_xmf3Up;
 	XMFLOAT3					m_xmf3Look;
@@ -27,6 +26,8 @@ protected:
 	CCamera						*m_pCamera = NULL;
 
 public:
+	XMFLOAT3					m_xmf3Position;
+
 	CPlayer();
 	virtual ~CPlayer();
 
