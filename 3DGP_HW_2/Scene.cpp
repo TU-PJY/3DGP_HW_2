@@ -70,7 +70,7 @@ void CScene::BuildObjects(ID3D12Device *pd3dDevice, ID3D12GraphicsCommandList *p
 	m_pShield = new CGameObject(XMFLOAT3(0.0, 0.0, 0.0));
 	m_pShield->SetMesh(pShieldMesh);
 	m_pShield->SetShader(pShader);
-	m_pShield->SetColor(XMFLOAT3(0.0, 0.0, 1.0));
+	m_pShield->SetColor(XMFLOAT3(0.0, 1.0, 0.0));
 }
 
 ID3D12RootSignature *CScene::CreateGraphicsRootSignature(ID3D12Device *pd3dDevice)

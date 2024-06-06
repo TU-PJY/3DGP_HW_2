@@ -344,6 +344,17 @@ void CGameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPA
 	DWORD dwDirection = 0;
 	switch (nMessageID)
 	{
+		case WM_KEYDOWN:
+			switch (wParam) {
+			case 'Z':
+				if (!m_pPlayer->shieldState)
+					m_pPlayer->shieldState = true;
+				else
+					m_pPlayer->shieldState = false;
+				break;
+			}
+			break;
+
         case WM_KEYUP:
 			switch (wParam) 
             {
@@ -360,6 +371,7 @@ void CGameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPA
 				case VK_F9:
 					ChangeSwapChainState();
 					break;*/
+
 
 				default:
 					break;
@@ -391,16 +403,8 @@ LRESULT CALLBACK CGameFramework::OnProcessingWindowMessage(HWND hWnd, UINT nMess
         case WM_MOUSEMOVE:
 			OnProcessingMouseMessage(hWnd, nMessageID, wParam, lParam);
             break;
+
         case WM_KEYDOWN:
-			case 'Z':
-				if(!m_pPlayer->shieldState)
-					m_pPlayer->shieldState = true;
-				else
-					m_pPlayer->shieldState = false;
-				break;
-			break;
-
-
         case WM_KEYUP:
 			OnProcessingKeyboardMessage(hWnd, nMessageID, wParam, lParam);
 			break;
