@@ -5,6 +5,7 @@
 #pragma once
 
 #include "Shader.h"
+#include <vector>
 
 class CScene
 {
@@ -13,6 +14,7 @@ public:
     ~CScene();
 
 	void InputPlayer(CPlayer* player);
+	void CreateMissile();
 
 	bool OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam);
 	bool OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam);
@@ -36,5 +38,7 @@ protected:
 	CGameObject					**m_ppObjects = 0;
 	CGameObject                 *m_pShield = 0;
 	CPlayer                     *m_pPlayer = 0;
+	CGameObject                 **m_pMissile = 0;
 	int							m_nObjects = 0;
+	int m_nMissiles = 0;
 };

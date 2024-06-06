@@ -352,6 +352,10 @@ void CGameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPA
 				else
 					m_pPlayer->shieldState = false;
 				break;
+
+			case VK_SPACE:
+				m_pScene->CreateMissile();
+				break;
 			}
 			break;
 
