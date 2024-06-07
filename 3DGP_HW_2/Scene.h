@@ -13,7 +13,12 @@ public:
 	~CScene();
 
 	void InputPlayer(CPlayer* player);
+
+	// 플레이어 미사일 생성
 	void CreateMissile();
+
+	// ufo 미사일 생성
+	void CreateUfoMissile(int i);
 
 	bool OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam);
 	bool OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam);
@@ -36,10 +41,15 @@ public:
 protected:
 	ID3D12RootSignature* m_pd3dGraphicsRootSignature = NULL;
 
-	CGameObject** m_ppObjects = 0;
-	CGameObject* m_pShield = 0;
-	CPlayer* m_pPlayer = 0;
-	CGameObject** m_pMissile = 0;
-	int	m_nObjects = 0;
-	int m_nMissiles = 0;
+	CGameObject* m_pShield{};
+	CPlayer* m_pPlayer{};
+
+	int	m_nUfos{};
+	CGameObject** m_pUfo{};
+
+	int m_nMissiles{};
+	CGameObject** m_pMissile{};
+
+	int m_nUfoMissiles{};
+	CGameObject** m_pUfoMissile{};
 };

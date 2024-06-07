@@ -8,14 +8,12 @@
 #include "Player.h"
 #include <random>
 
-std::random_device rd;
-std::uniform_real_distribution uidX{ -29.0, 29.0 };
-std::uniform_real_distribution uidY{ -6.0, 6.0 };
-
 CGameObject::CGameObject(XMFLOAT3 Position)
 {
 	m_xmf4x4World = Matrix4x4::Identity();
 	EnemyPosition = Position;
+
+	UfoMissileDelay = 20;
 
 	// 음수이면 오른쪽, 양수이면 왼쪽으로 움직이도록 방향 설정
 	if (Position.x < 0) MoveDirection = 1;
@@ -46,30 +44,42 @@ void CGameObject::SetShader(CShader* pShader)
 	if (m_pShader) m_pShader->AddRef();
 }
 
+
 // Ufo 피격 후 재생성
 void CGameObject::RegenUfo() {
+	std::random_device rd;
+	std::uniform_real_distribution uidX{ -29.0, 29.0 };
+	std::uniform_real_distribution uidY{ -6.0, 6.0 };
+
 	EnemyPosition.x = uidX(rd);
 	EnemyPosition.y = uidY(rd);
 	EnemyPosition.z = 20.0;
-	acc = 0;
 
 	m_xmf4x4World = Matrix4x4::Identity();
 	SetPosition(EnemyPosition);
 	Rotate(0.0, 180.0, 0.0);
 
+	acc = 0;
+	UfoMissileDelay = 20;
 	UfoDead = false;
 }
+
 
 void CGameObject::AnimateUfo(float fTimeElapsed)
 {
 	// ufo 미사일 피격 전
 	if (!UfoDead) {
+		
+
 		EnemyPosition.x += fTimeElapsed * MoveDirection * 10;
 
 		if (EnemyPosition.x > 30.0 || EnemyPosition.x < -30.0)
 			MoveDirection *= -1;
 
 		SetPosition(EnemyPosition);
+
+		if(UfoMissileDelay > 0)
+			UfoMissileDelay -= fTimeElapsed * 25;
 	}
 
 	// ufo 미사일 피격 후
@@ -84,6 +94,20 @@ void CGameObject::AnimateUfo(float fTimeElapsed)
 			RegenUfo();
 	}
 }
+
+
+// ufo missile
+void CGameObject::AnimateUfoMissile(float fTimeElapsed) {
+	Move(m_xmf3MovingDirection, 100 * fTimeElapsed);
+	moveDistance += fTimeElapsed * 100;
+
+	Rotate(0.0, 0.0, 400 * fTimeElapsed);
+
+	// 일정 거리 이상 이동하면 비활성화 된다
+	if (moveDistance > 150)
+		activateState = false;
+}
+
 
 // shield
 void CGameObject::AnimateShield(XMFLOAT3 position, float fTimeElapsed) {
@@ -146,6 +170,14 @@ void CGameObject::Move(XMFLOAT3& vDirection, float fSpeed) {
 void CGameObject::LookAt(XMFLOAT3& xmf3LookAt, XMFLOAT3& xmf3Up)
 {
 	XMFLOAT4X4 xmf4x4View = Matrix4x4::LookAtLH(GetPosition(), xmf3LookAt, xmf3Up);
+	m_xmf4x4World._11 = xmf4x4View._11; m_xmf4x4World._12 = xmf4x4View._21; m_xmf4x4World._13 = xmf4x4View._31;
+	m_xmf4x4World._21 = xmf4x4View._12; m_xmf4x4World._22 = xmf4x4View._22; m_xmf4x4World._23 = xmf4x4View._32;
+	m_xmf4x4World._31 = xmf4x4View._13; m_xmf4x4World._32 = xmf4x4View._23; m_xmf4x4World._33 = xmf4x4View._33;
+}
+
+void CGameObject::LookTo(XMFLOAT3& xmf3LookTo, XMFLOAT3& xmf3Up)
+{
+	XMFLOAT4X4 xmf4x4View = Matrix4x4::LookToLH(GetPosition(), xmf3LookTo, xmf3Up);
 	m_xmf4x4World._11 = xmf4x4View._11; m_xmf4x4World._12 = xmf4x4View._21; m_xmf4x4World._13 = xmf4x4View._31;
 	m_xmf4x4World._21 = xmf4x4View._12; m_xmf4x4World._22 = xmf4x4View._22; m_xmf4x4World._23 = xmf4x4View._32;
 	m_xmf4x4World._31 = xmf4x4View._13; m_xmf4x4World._32 = xmf4x4View._23; m_xmf4x4World._33 = xmf4x4View._33;

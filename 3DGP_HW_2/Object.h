@@ -29,17 +29,23 @@ public:
 	// UFO가 플레이어 미사일 피격 시 활성화
 	bool UfoDead{};
 
-	// 미사일이 출력되고 업데이트 되는 여부
-	bool activateState{};
-
 	// ufo 피격 시 사용되는 가속값
 	float acc{};
+
+	// ufo 미사일 생성 딜레이
+	float UfoMissileDelay{};
 
 	// ufo 피격 후 재생성
 	void RegenUfo();
 
+	// ufo 미사일 업데이트
+	void AnimateUfoMissile(float fTimeElapsed);
+
+	// 미사일이 출력되고 업데이트 되는 여부
+	bool activateState{};
+
 	// 미사일 날아가는 방향
-	XMFLOAT3					m_xmf3MovingDirection = XMFLOAT3(0.0f, 0.0f, 1.0f);
+	XMFLOAT3 m_xmf3MovingDirection = XMFLOAT3(0.0f, 0.0f, 1.0f);
 
 	// 미사일 날아가는 방향 지정
 	void SetMovingDirection(XMFLOAT3& xmf3MovingDirection);
