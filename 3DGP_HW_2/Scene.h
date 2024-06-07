@@ -32,6 +32,8 @@ public:
 
 	void ReleaseUploadBuffers();
 
+	void CheckObjectByBulletCollisions();
+
 protected:
 	ID3D12RootSignature* m_pd3dGraphicsRootSignature = NULL;
 
@@ -39,6 +41,6 @@ protected:
 	CGameObject* m_pShield = 0;
 	CPlayer* m_pPlayer = 0;
 	CGameObject** m_pMissile = 0;
-	int							m_nObjects = 0;
+	int	m_nObjects = 0;
 	int m_nMissiles = 0;
 };

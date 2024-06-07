@@ -160,26 +160,32 @@ bool CScene::ProcessInput()
 	return(false);
 }
 
-void CScene::AnimateObjects(float fTimeElapsed)
-{
-	for (int i = 0; i < m_nObjects; i++)
-		m_ppObjects[i]->Animate(fTimeElapsed);
+void CScene::AnimateObjects(float fTimeElapsed){
+	// m_pShield
+	m_pShield->AnimateShield(m_pPlayer->m_xmf3Position, fTimeElapsed);
 
 	// activateState가 true일 때만 업데이트 한다
 	for (int i = 0; i < m_nMissiles; ++i) {
-		if (m_pMissile[i]->activateState)
+		if (m_pMissile[i]->activateState) {
 			m_pMissile[i]->AnimateMissile(fTimeElapsed);
+			m_pMissile[i]->UpdateBoundingBox();
+		}
 	}
 
-	m_pShield->AnimateShield(m_pPlayer->m_xmf3Position, fTimeElapsed);
+	for (int i = 0; i < m_nObjects; i++) {
+		m_ppObjects[i]->Animate(fTimeElapsed);
+		m_ppObjects[i]->UpdateBoundingBox();
+	}
+
+
+	CheckObjectByBulletCollisions();
 }
 
 void CScene::PrepareRender(ID3D12GraphicsCommandList* pd3dCommandList) {
 	pd3dCommandList->SetGraphicsRootSignature(m_pd3dGraphicsRootSignature);
 }
 
-void CScene::Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera* pCamera)
-{
+void CScene::Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera* pCamera) {
 	pCamera->SetViewportsAndScissorRects(pd3dCommandList);
 	pCamera->UpdateShaderVariables(pd3dCommandList);
 
@@ -216,4 +222,16 @@ void CScene::CreateMissile() {
 			break;
 		}
 	}
+}
+
+// 미사일 - ufo 충돌 처리
+void CScene::CheckObjectByBulletCollisions() {
+	for (int i = 0; i < m_nMissiles; ++i) {
+		for (int j = 0; j < m_nObjects; ++j) {
+			if (m_pMissile[i]->activateState && m_ppObjects[j]->m_xmOOBB.Intersects(m_pMissile[i]->m_xmOOBB)) {
+				m_pMissile[i]->activateState = false;
+			}
+		}
+	}
+
 }

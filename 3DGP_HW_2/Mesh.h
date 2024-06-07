@@ -46,8 +46,8 @@ public:
 
 	void ReleaseUploadBuffers();
 
+	BoundingOrientedBox						m_xmOOBB = BoundingOrientedBox();
 protected:
-	BoundingBox						m_xmBoundingBox;
 
 	UINT							m_nVertices = 0;
 	XMFLOAT3* m_pxmf3Positions = NULL;

@@ -43,7 +43,8 @@ public:
 	// 미사일 이동거리
 	double moveDistance{};
 
-	void LookAt(XMFLOAT3& xmf3LookAt, XMFLOAT3& xmf3Up);
+	// 충돌처리 OOBB
+	BoundingOrientedBox			m_xmOOBB = BoundingOrientedBox();
 
 	void SetMesh(CMesh* pMesh);
 	void SetShader(CShader* pShader);
@@ -74,11 +75,12 @@ public:
 	void MoveStrafe(float fDistance = 1.0f);
 	void MoveUp(float fDistance = 1.0f);
 	void MoveForward(float fDistance = 1.0f);
+	void LookAt(XMFLOAT3& xmf3LookAt, XMFLOAT3& xmf3Up);
 
 	void Rotate(float fPitch = 10.0f, float fYaw = 10.0f, float fRoll = 10.0f);
 	void Rotate(XMFLOAT3* pxmf3Axis, float fAngle);
 
-	void CGameObject::InputPlayerPosition(XMFLOAT3 position);
+	void UpdateBoundingBox();
 };
 
 class CUfoObject : public CGameObject

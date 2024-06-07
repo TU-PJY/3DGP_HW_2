@@ -106,8 +106,8 @@ void CMesh::LoadMeshFromFile(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList
 
 		nReads = (UINT)::fread(&nStrLength, sizeof(BYTE), 1, pFile);
 		nReads = (UINT)::fread(pstrToken, sizeof(char), 14, pFile); //"<BoundingBox>:"
-		nReads = (UINT)::fread(&m_xmBoundingBox.Center, sizeof(float), 3, pFile);
-		nReads = (UINT)::fread(&m_xmBoundingBox.Extents, sizeof(float), 3, pFile);
+		nReads = (UINT)::fread(&m_xmOOBB.Center, sizeof(float), 3, pFile);
+		nReads = (UINT)::fread(&m_xmOOBB.Extents, sizeof(float), 3, pFile);
 
 		nReads = (UINT)::fread(&nStrLength, sizeof(BYTE), 1, pFile);
 		nReads = (UINT)::fread(pstrToken, sizeof(char), 11, pFile); //"<Vertices>:"
