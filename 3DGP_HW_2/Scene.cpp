@@ -173,10 +173,9 @@ void CScene::AnimateObjects(float fTimeElapsed){
 	}
 
 	for (int i = 0; i < m_nObjects; i++) {
-		m_ppObjects[i]->Animate(fTimeElapsed);
+		m_ppObjects[i]->AnimateUfo(fTimeElapsed);
 		m_ppObjects[i]->UpdateBoundingBox();
 	}
-
 
 	CheckObjectByBulletCollisions();
 }
@@ -230,7 +229,7 @@ void CScene::CheckObjectByBulletCollisions() {
 		for (int j = 0; j < m_nObjects; ++j) {
 			if (m_pMissile[i]->activateState && m_ppObjects[j]->m_xmOOBB.Intersects(m_pMissile[i]->m_xmOOBB)) {
 				m_pMissile[i]->activateState = false;
-				m_ppObjects[j]->acc = 40.0;
+				m_ppObjects[j]->acc = 20.0;
 				m_ppObjects[j]->UfoDead = true;
 			}
 		}

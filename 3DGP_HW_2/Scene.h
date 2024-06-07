@@ -5,7 +5,6 @@
 #pragma once
 
 #include "Shader.h"
-#include <vector>
 
 class CScene
 {

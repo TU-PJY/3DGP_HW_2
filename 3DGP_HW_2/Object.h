@@ -33,7 +33,10 @@ public:
 	bool activateState{};
 
 	// ufo 피격 시 사용되는 가속값
-	float acc;
+	float acc{};
+
+	// ufo 피격 후 재생성
+	void RegenUfo();
 
 	// 미사일 날아가는 방향
 	XMFLOAT3					m_xmf3MovingDirection = XMFLOAT3(0.0f, 0.0f, 1.0f);
@@ -57,7 +60,7 @@ public:
 	virtual void UpdateShaderVariables(ID3D12GraphicsCommandList* pd3dCommandList);
 	virtual void ReleaseShaderVariables();
 
-	virtual void Animate(float fTimeElapsed);
+	virtual void AnimateUfo(float fTimeElapsed);
 	void AnimateShield(XMFLOAT3 position, float fTimeElapsed);
 	void CGameObject::AnimateMissile(float fTimeElapsed);
 

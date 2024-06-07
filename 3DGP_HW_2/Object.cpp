@@ -6,6 +6,11 @@
 #include "Object.h"
 #include "Shader.h"
 #include "Player.h"
+#include <random>
+
+std::random_device rd;
+std::uniform_real_distribution uidX{ -29.0, 29.0 };
+std::uniform_real_distribution uidY{ -6.0, 6.0 };
 
 CGameObject::CGameObject(XMFLOAT3 Position)
 {
@@ -41,45 +46,62 @@ void CGameObject::SetShader(CShader* pShader)
 	if (m_pShader) m_pShader->AddRef();
 }
 
-void CGameObject::Animate(float fTimeElapsed)
+// Ufo 피격 후 재생성
+void CGameObject::RegenUfo() {
+	EnemyPosition.x = uidX(rd);
+	EnemyPosition.y = uidY(rd);
+	EnemyPosition.z = 20.0;
+	acc = 0;
+
+	m_xmf4x4World = Matrix4x4::Identity();
+	SetPosition(EnemyPosition);
+	Rotate(0.0, 180.0, 0.0);
+
+	UfoDead = false;
+}
+
+void CGameObject::AnimateUfo(float fTimeElapsed)
 {
 	// ufo 미사일 피격 전
 	if (!UfoDead) {
 		EnemyPosition.x += fTimeElapsed * MoveDirection * 10;
 
-		if (EnemyPosition.x > 20.0 || EnemyPosition.x < -20.0)
+		if (EnemyPosition.x > 30.0 || EnemyPosition.x < -30.0)
 			MoveDirection *= -1;
 
-		this->SetPosition(EnemyPosition);
+		SetPosition(EnemyPosition);
 	}
 
 	// ufo 미사일 피격 후
 	else {
-		EnemyPosition.y += acc* fTimeElapsed;
+		EnemyPosition.y += 2 * acc * fTimeElapsed;
 		acc -= 40 * fTimeElapsed;
 
-		this->SetPosition(EnemyPosition);
-		this->Rotate(800 * fTimeElapsed, 800 * fTimeElapsed, 800 * fTimeElapsed);
+		SetPosition(EnemyPosition);
+		Rotate(800 * fTimeElapsed, 800 * fTimeElapsed, 800 * fTimeElapsed);
+
+		if (EnemyPosition.y < -80)
+			RegenUfo();
 	}
 }
 
 // shield
 void CGameObject::AnimateShield(XMFLOAT3 position, float fTimeElapsed) {
-	this->SetPosition(position);
-	this->Rotate(50 * fTimeElapsed, 50 * fTimeElapsed, 50 * fTimeElapsed);
+	SetPosition(position);
+	Rotate(50 * fTimeElapsed, 50 * fTimeElapsed, 50 * fTimeElapsed);
 }
 
 
 // missile
 void CGameObject::AnimateMissile(float fTimeElapsed) {
-	this->Move(m_xmf3MovingDirection, 100 * fTimeElapsed);
-	this->moveDistance += fTimeElapsed * 100;
+	Move(m_xmf3MovingDirection, 100 * fTimeElapsed);
+	moveDistance += fTimeElapsed * 100;
 
-	this->Rotate(0.0, 0.0, 400 * fTimeElapsed);
+	Rotate(0.0, 0.0, 400 * fTimeElapsed);
 
 	// 일정 거리 이상 이동하면 비활성화 된다
-	if (this->moveDistance > 150)
-		this->activateState = false;
+	if (moveDistance > 150)
+		activateState = false;
 }
 
 void CGameObject::CreateShaderVariables(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList)
