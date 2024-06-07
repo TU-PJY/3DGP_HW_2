@@ -22,8 +22,20 @@ public:
 	CShader* m_pShader = NULL;
 	XMFLOAT3						m_xmf3Color = XMFLOAT3(1.0f, 1.0f, 1.0f);
 
+
+	// 쉴드 업데이트
+	void AnimateShield(XMFLOAT3 position, float fTimeElapsed);
+
 	// 쉴드 체력 및 쉴드 사용 가능 여부
 	float ShieldHP = 1.0;
+
+
+
+	// ufo 업데이트
+	void AnimateUfo(float fTimeElapsed);
+
+	// ufo 피격 후 재생성
+	void RegenUfo();
 
 	// UFO가 움직이는 방향 및 위치
 	XMFLOAT3 EnemyPosition{ 1.0f, 1.0f, 1.0f };
@@ -38,11 +50,19 @@ public:
 	// ufo 미사일 생성 딜레이
 	float UfoMissileDelay{};
 
-	// ufo 피격 후 재생성
-	void RegenUfo();
+	
+
+	// 미사일 날아가는 방향 지정
+	void SetMovingDirection(XMFLOAT3& xmf3MovingDirection);
 
 	// ufo 미사일 업데이트
 	void AnimateUfoMissile(float fTimeElapsed, CPlayer* player);
+
+	// 플레이어 미사일 업데이트
+	void AnimateMissile(float fTimeElapsed);
+
+	// 미사일 위치 이동
+	void Move(XMFLOAT3& vDirection, float fSpeed);
 
 	// 미사일이 출력되고 업데이트 되는 여부
 	bool ActivateState{};
@@ -50,14 +70,13 @@ public:
 	// 미사일 날아가는 방향
 	XMFLOAT3 m_xmf3MovingDirection = XMFLOAT3(0.0f, 0.0f, 1.0f);
 
-	// 미사일 날아가는 방향 지정
-	void SetMovingDirection(XMFLOAT3& xmf3MovingDirection);
-
-	// 미사일 위치 이동
-	void Move(XMFLOAT3& vDirection, float fSpeed);
-
 	// 미사일 이동거리
 	double moveDistance{};
+
+
+
+	void AnimateStartMenu(float fTimeElapsed);
+
 
 	// 충돌처리 OOBB
 	BoundingOrientedBox			m_xmOOBB = BoundingOrientedBox();
@@ -68,10 +87,6 @@ public:
 	virtual void CreateShaderVariables(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList);
 	virtual void UpdateShaderVariables(ID3D12GraphicsCommandList* pd3dCommandList);
 	virtual void ReleaseShaderVariables();
-
-	virtual void AnimateUfo(float fTimeElapsed);
-	void AnimateShield(XMFLOAT3 position, float fTimeElapsed);
-	void CGameObject::AnimateMissile(float fTimeElapsed);
 
 	virtual void OnPrepareRender() { }
 	virtual void Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera* pCamera = NULL);

@@ -448,6 +448,7 @@ void CGameFramework::OnDestroy()
 #endif
 }
 
+
 void CGameFramework::BuildObjects()
 {
 	m_pd3dCommandList->Reset(m_pd3dCommandAllocator, NULL);
@@ -474,6 +475,7 @@ void CGameFramework::BuildObjects()
 	m_GameTimer.Reset();
 }
 
+
 void CGameFramework::ReleaseObjects()
 {
 	if (m_pPlayer) delete m_pPlayer;
@@ -487,7 +489,7 @@ void CGameFramework::ProcessInput()
 	static UCHAR pKeysBuffer[256];
 	DWORD dwDirection = 0;
 
-	if (::GetKeyboardState(pKeysBuffer))
+	if (::GetKeyboardState(pKeysBuffer) && m_pScene->GameRunningState)
 	{
 		if (pKeysBuffer['W'] & 0xF0) dwDirection |= DIR_FORWARD;
 		if (pKeysBuffer['S'] & 0xF0) dwDirection |= DIR_BACKWARD;
@@ -623,7 +625,7 @@ void CGameFramework::D3D_Main()
 	if (m_pScene)
 		m_pScene->Render(m_pd3dCommandList, m_pCamera);
 
-	if (m_pPlayer)
+	if (m_pPlayer && m_pScene->GameRunningState)
 		m_pPlayer->Render(m_pd3dCommandList, m_pCamera);
 
 	AnimateObjects();

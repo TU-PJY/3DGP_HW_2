@@ -218,6 +218,8 @@ void CScene::AnimateObjects(float fTimeElapsed){
 		PlayerMissileToUfoCollision();
 		UfoMissileToPlayerCollision();
 	}
+	else
+		m_pStartMenu->AnimateStartMenu(fTimeElapsed);
 }
 
 
@@ -364,7 +366,15 @@ void CScene::ResetGame() {
 	m_pShield->SetColor(XMFLOAT3(1.0 - m_pShield->ShieldHP, m_pShield->ShieldHP, 0.0));
 	m_pPlayer->ShieldState = true;
 
-	m_pPlayer->SetPosition(XMFLOAT3(0.0, 0.0, 0.0));
+	// 플레이어 위치 초기화
+	m_pPlayer->m_xmf3Position = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	m_pPlayer->m_xmf3Right = XMFLOAT3(1.0f, 0.0f, 0.0f);
+	m_pPlayer->m_xmf3Up = XMFLOAT3(0.0f, 1.0f, 0.0f);
+	m_pPlayer->m_xmf3Look = XMFLOAT3(0.0f, 0.0f, 1.0f);
+
+	m_pPlayer->m_fPitch = 0.0f;
+	m_pPlayer->m_fRoll = 0.0f;
+	m_pPlayer->m_fYaw = 0.0f;
 
 	// 플레이어 미사일 모두 비활성화
 	for (int i = 0; i < m_nMissiles; ++i)
@@ -386,6 +396,10 @@ void CScene::ResetGame() {
 	m_pUfo[1]->SetPosition(XMFLOAT3(10.0f, -3.0f, 20.0f));
 	m_pUfo[2]->SetPosition(XMFLOAT3(1.0f, -6.0f, 20.0f));
 	m_pUfo[3]->SetPosition(XMFLOAT3(-1.0f, 6.0f, 20.0f));
+
+	// 시작 메뉴 초기화
+	m_pStartMenu->m_xmf4x4World = Matrix4x4::Identity();
+	m_pStartMenu->SetPosition(XMFLOAT3(0.0, 3.0, -4.0));
 
 	// 게임 동작 상태 비활성화
 	GameRunningState = false;

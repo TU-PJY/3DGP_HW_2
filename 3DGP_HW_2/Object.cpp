@@ -115,7 +115,7 @@ void CGameObject::AnimateUfoMissile(float fTimeElapsed, CPlayer* player) {
 	Rotate(0.0, 0.0, 400 * fTimeElapsed);
 
 	// 일정 거리 이상 이동하면 비활성화 된다
-	if (moveDistance > 150)
+	if (moveDistance > 250)
 		ActivateState = false;
 }
 
@@ -135,8 +135,12 @@ void CGameObject::AnimateMissile(float fTimeElapsed) {
 	Rotate(0.0, 0.0, 400 * fTimeElapsed);
 
 	// 일정 거리 이상 이동하면 비활성화 된다
-	if (moveDistance > 150)
+	if (moveDistance > 250)
 		ActivateState = false;
+}
+
+void CGameObject::AnimateStartMenu(float fTimeElapsed) {
+	Rotate(0.0, fTimeElapsed * 100.0, 0.0);
 }
 
 void CGameObject::CreateShaderVariables(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList)

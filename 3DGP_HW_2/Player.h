@@ -6,6 +6,13 @@
 class CPlayer : public CGameObject
 {
 protected:
+	LPVOID						m_pPlayerUpdatedContext;
+	LPVOID						m_pCameraUpdatedContext;
+
+	CCamera* m_pCamera = NULL;
+
+
+public:
 	XMFLOAT3					m_xmf3Right;
 	XMFLOAT3					m_xmf3Up;
 	XMFLOAT3					m_xmf3Look;
@@ -16,17 +23,11 @@ protected:
 
 	XMFLOAT3					m_xmf3Velocity;
 	XMFLOAT3     				m_xmf3Gravity;
+
 	float           			m_fMaxVelocityXZ;
 	float           			m_fMaxVelocityY;
 	float           			m_fFriction;
 
-	LPVOID						m_pPlayerUpdatedContext;
-	LPVOID						m_pCameraUpdatedContext;
-
-	CCamera* m_pCamera = NULL;
-
-
-public:
 	XMFLOAT3					m_xmf3Position;
 
 	// 충돌처리 OOBB
