@@ -20,6 +20,9 @@ public:
 	// ufo 미사일 생성
 	void CreateUfoMissile(int i);
 
+		// 게임 초기화
+	void ResetGame();
+
 	bool OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam);
 	bool OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam);
 
@@ -41,6 +44,9 @@ public:
 
 	CGameObject* m_pShield{};
 
+	// 게임 시작 여부
+	bool GameRunningState = false;
+
 protected:
 	ID3D12RootSignature* m_pd3dGraphicsRootSignature = NULL;
 
@@ -54,4 +60,6 @@ protected:
 
 	int m_nUfoMissiles{};
 	CGameObject** m_pUfoMissile{};
+
+	CGameObject* m_pStartMenu{};
 };

@@ -58,7 +58,6 @@ void CGameObject::RegenUfo() {
 
 	m_xmf4x4World = Matrix4x4::Identity();
 	SetPosition(EnemyPosition);
-	Rotate(0.0, 180.0, 0.0);
 
 	FallingAcc = 0;
 	UfoMissileDelay = 40;

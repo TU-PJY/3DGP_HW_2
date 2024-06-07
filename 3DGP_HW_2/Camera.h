@@ -26,8 +26,6 @@ protected:
 	XMFLOAT3						m_xmf3Offset;
 	float           				m_fTimeLag;
 
-	XMFLOAT4X4						m_xmf4x4View;
-	XMFLOAT4X4						m_xmf4x4Projection;
 
 #ifdef _WITH_DIERECTX_MATH_FRUSTUM
 	BoundingFrustum					m_xmFrustumView;
@@ -43,10 +41,13 @@ protected:
 	CPlayer* m_pPlayer = NULL;
 
 public:
+	XMFLOAT4X4						m_xmf4x4View;
+	XMFLOAT4X4						m_xmf4x4Projection;
+
 	CCamera();
 	CCamera(CCamera* pCamera);
 	virtual ~CCamera();
-
+	
 	virtual void CreateShaderVariables(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList);
 	virtual void ReleaseShaderVariables();
 	virtual void UpdateShaderVariables(ID3D12GraphicsCommandList* pd3dCommandList);

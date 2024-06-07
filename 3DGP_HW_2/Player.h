@@ -28,7 +28,6 @@ protected:
 
 public:
 	XMFLOAT3					m_xmf3Position;
-	bool ShieldState = true;
 
 	// 충돌처리 OOBB
 	BoundingOrientedBox			m_xmOOBB = BoundingOrientedBox();
@@ -36,6 +35,9 @@ public:
 
 	// 플레이어 체력
 	float PlayerHP = 1.0;
+
+	// 플레이어 쉴드 사용 상태
+	bool ShieldState = true;
 
 	CPlayer();
 	virtual ~CPlayer();

@@ -24,7 +24,6 @@ public:
 
 	// 쉴드 체력 및 쉴드 사용 가능 여부
 	float ShieldHP = 1.0;
-	bool ShieldAvailableState = true;
 
 	// UFO가 움직이는 방향 및 위치
 	XMFLOAT3 EnemyPosition{ 1.0f, 1.0f, 1.0f };

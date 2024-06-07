@@ -349,19 +349,24 @@ void CGameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPA
 	case WM_KEYDOWN:
 		switch (wParam) {
 		case 'Z':  // 쉴드 활성화 / 비활성화
-			// 쉴드 사용 가능 상태가 false이면 키 입력을 받지 않는다
-			if (m_pScene->m_pShield->ShieldHP == 0)
-				break;
-
-			if (!m_pPlayer->ShieldState)
-				m_pPlayer->ShieldState = true;
-			else
-				m_pPlayer->ShieldState = false;
+			// 쉴드 사용 가능 상태가 false이거나 게임을 시작한 상태가 아니라면 키 입력을 받지 않는다
+			if (m_pScene->m_pShield->ShieldHP > 0 && m_pScene->GameRunningState) {
+				if (!m_pPlayer->ShieldState)
+					m_pPlayer->ShieldState = true;
+				else
+					m_pPlayer->ShieldState = false;
+			}
 			break;
 
 			// 플레이어 미사일 발사
+			// 게임을 시작하지 않은 상태에서는 게임 시작 키로 동작한다
 		case VK_SPACE:
-			m_pScene->CreateMissile();
+			if (m_pScene->GameRunningState)
+				m_pScene->CreateMissile();
+
+			else
+				m_pScene->GameRunningState = true;
+
 			break;
 		}
 		break;
@@ -403,7 +408,8 @@ LRESULT CALLBACK CGameFramework::OnProcessingWindowMessage(HWND hWnd, UINT nMess
 	case WM_LBUTTONUP:
 	case WM_RBUTTONUP:
 	case WM_MOUSEMOVE:
-		OnProcessingMouseMessage(hWnd, nMessageID, wParam, lParam);
+		if (m_pScene->GameRunningState)
+			OnProcessingMouseMessage(hWnd, nMessageID, wParam, lParam);
 		break;
 
 	case WM_KEYDOWN:
@@ -480,6 +486,7 @@ void CGameFramework::ProcessInput()
 {
 	static UCHAR pKeysBuffer[256];
 	DWORD dwDirection = 0;
+
 	if (::GetKeyboardState(pKeysBuffer))
 	{
 		if (pKeysBuffer['W'] & 0xF0) dwDirection |= DIR_FORWARD;
@@ -489,6 +496,7 @@ void CGameFramework::ProcessInput()
 		if (pKeysBuffer['R'] & 0xF0) dwDirection |= DIR_UP;
 		if (pKeysBuffer['F'] & 0xF0) dwDirection |= DIR_DOWN;
 	}
+
 
 	float cxDelta = 0.0f, cyDelta = 0.0f;
 	if (GetCapture() == m_hWnd)
@@ -518,7 +526,8 @@ void CGameFramework::ProcessInput()
 
 void CGameFramework::AnimateObjects()
 {
-	if (m_pScene) m_pScene->AnimateObjects(m_GameTimer.GetTimeElapsed());
+	if (m_pScene) 
+		m_pScene->AnimateObjects(m_GameTimer.GetTimeElapsed());
 }
 
 void CGameFramework::CreateShaderVariables()

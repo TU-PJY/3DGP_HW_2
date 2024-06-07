@@ -22,6 +22,7 @@ CCamera::CCamera()
 	m_pPlayer = NULL;
 }
 
+
 CCamera::CCamera(CCamera* pCamera)
 {
 	if (pCamera)
