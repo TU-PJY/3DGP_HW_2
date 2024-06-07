@@ -209,6 +209,7 @@ void CScene::AnimateObjects(float fTimeElapsed){
 	}
 
 	PlayerMissileToUfoCollision();
+	UfoMissileToPlayerCollision();
 }
 
 
@@ -301,6 +302,15 @@ void CScene::PlayerMissileToUfoCollision() {
 				m_pUfo[j]->acc = 20.0;
 				m_pUfo[j]->UfoDead = true;
 			}
+		}
+	}
+}
+
+// ufo 미사일 - 플레이어 충돌 처리
+void CScene::UfoMissileToPlayerCollision() {
+	for (int i = 0; i < m_nUfoMissiles; ++i) {
+		if (m_pUfoMissile[i]->activateState && m_pPlayer->m_xmOOBB.Intersects(m_pUfoMissile[i]->m_xmOOBB)) {
+			m_pUfoMissile[i]->activateState = false;
 		}
 	}
 }

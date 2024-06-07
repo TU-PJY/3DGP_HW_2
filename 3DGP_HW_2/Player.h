@@ -25,9 +25,14 @@ protected:
 
 	CCamera* m_pCamera = NULL;
 
+
 public:
 	XMFLOAT3					m_xmf3Position;
 	bool shieldState = true;
+
+	// 충돌처리 OOBB
+	BoundingOrientedBox			m_xmOOBB = BoundingOrientedBox();
+	void UpdateBoundingBox();
 
 	CPlayer();
 	virtual ~CPlayer();
