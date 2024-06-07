@@ -60,7 +60,7 @@ void CGameObject::RegenUfo() {
 	SetPosition(EnemyPosition);
 	Rotate(0.0, 180.0, 0.0);
 
-	acc = 0;
+	FallingAcc = 0;
 	UfoMissileDelay = 40;
 	UfoDead = false;
 }
@@ -83,8 +83,8 @@ void CGameObject::AnimateUfo(float fTimeElapsed)
 
 	// ufo 미사일 피격 후
 	else {
-		EnemyPosition.y += 2 * acc * fTimeElapsed;
-		acc -= 40 * fTimeElapsed;
+		EnemyPosition.y += 2 * FallingAcc * fTimeElapsed;
+		FallingAcc -= 40 * fTimeElapsed;
 
 		SetPosition(EnemyPosition);
 		Rotate(800 * fTimeElapsed, 800 * fTimeElapsed, 800 * fTimeElapsed);
@@ -117,7 +117,7 @@ void CGameObject::AnimateUfoMissile(float fTimeElapsed, CPlayer* player) {
 
 	// 일정 거리 이상 이동하면 비활성화 된다
 	if (moveDistance > 150)
-		activateState = false;
+		ActivateState = false;
 }
 
 
@@ -137,7 +137,7 @@ void CGameObject::AnimateMissile(float fTimeElapsed) {
 
 	// 일정 거리 이상 이동하면 비활성화 된다
 	if (moveDistance > 150)
-		activateState = false;
+		ActivateState = false;
 }
 
 void CGameObject::CreateShaderVariables(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* pd3dCommandList)

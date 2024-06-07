@@ -22,6 +22,10 @@ public:
 	CShader* m_pShader = NULL;
 	XMFLOAT3						m_xmf3Color = XMFLOAT3(1.0f, 1.0f, 1.0f);
 
+	// 쉴드 체력 및 쉴드 사용 가능 여부
+	float ShieldHP = 1.0;
+	bool ShieldAvailableState = true;
+
 	// UFO가 움직이는 방향 및 위치
 	XMFLOAT3 EnemyPosition{ 1.0f, 1.0f, 1.0f };
 	int MoveDirection{};
@@ -30,7 +34,7 @@ public:
 	bool UfoDead{};
 
 	// ufo 피격 시 사용되는 가속값
-	float acc{};
+	float FallingAcc{};
 
 	// ufo 미사일 생성 딜레이
 	float UfoMissileDelay{};
@@ -42,7 +46,7 @@ public:
 	void AnimateUfoMissile(float fTimeElapsed, CPlayer* player);
 
 	// 미사일이 출력되고 업데이트 되는 여부
-	bool activateState{};
+	bool ActivateState{};
 
 	// 미사일 날아가는 방향
 	XMFLOAT3 m_xmf3MovingDirection = XMFLOAT3(0.0f, 0.0f, 1.0f);

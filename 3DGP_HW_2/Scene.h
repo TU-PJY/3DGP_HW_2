@@ -39,10 +39,11 @@ public:
 	void PlayerMissileToUfoCollision();
 	void UfoMissileToPlayerCollision();
 
+	CGameObject* m_pShield{};
+
 protected:
 	ID3D12RootSignature* m_pd3dGraphicsRootSignature = NULL;
 
-	CGameObject* m_pShield{};
 	CPlayer* m_pPlayer{};
 
 	int	m_nUfos{};

@@ -179,7 +179,7 @@ void CScene::AnimateObjects(float fTimeElapsed){
 	// m_pMissile
 	// activateState가 true일 때만 업데이트 한다
 	for (int i = 0; i < m_nMissiles; ++i) {
-		if (m_pMissile[i]->activateState) {
+		if (m_pMissile[i]->ActivateState) {
 			m_pMissile[i]->AnimateMissile(fTimeElapsed);
 			m_pMissile[i]->UpdateBoundingBox();
 		}
@@ -202,7 +202,7 @@ void CScene::AnimateObjects(float fTimeElapsed){
 
 	// m_pUfoMissile
 	for (int i = 0; i < m_nUfoMissiles; ++i) {
-		if (m_pUfoMissile[i]->activateState) {
+		if (m_pUfoMissile[i]->ActivateState) {
 			m_pUfoMissile[i]->AnimateUfoMissile(fTimeElapsed, m_pPlayer);
 			m_pUfoMissile[i]->UpdateBoundingBox();
 		}
@@ -223,13 +223,13 @@ void CScene::Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera* pCamera
 	pCamera->UpdateShaderVariables(pd3dCommandList);
 
 	// m_pShield
-	if (m_pShield && m_pPlayer->shieldState)
+	if (m_pShield && m_pPlayer->ShieldState)
 		m_pShield->Render(pd3dCommandList, pCamera);
 
 	// m_pMissile
 	// activateState가 true일 때만 랜더링한다
 	for (int i = 0; i < m_nMissiles; ++i) {
-		if (m_pMissile[i]->activateState)
+		if (m_pMissile[i]->ActivateState)
 			m_pMissile[i]->Render(pd3dCommandList, pCamera);
 	}
 
@@ -239,7 +239,7 @@ void CScene::Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera* pCamera
 
 	// m_pUfoMissile
 	for (int i = 0; i < m_nUfoMissiles; ++i) {
-		if (m_pUfoMissile[i]->activateState)
+		if (m_pUfoMissile[i]->ActivateState)
 			m_pUfoMissile[i]->Render(pd3dCommandList, pCamera);
 	}
 }
@@ -248,7 +248,7 @@ void CScene::Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera* pCamera
 //  플레이어 미사일 생성
 void CScene::CreateMissile() {
 	for (int i = 0; i < m_nMissiles; ++i) {
-		if (!m_pMissile[i]->activateState) {
+		if (!m_pMissile[i]->ActivateState) {
 			XMFLOAT3 xmf3Up = m_pPlayer->GetUp();
 			XMFLOAT3 xmf3Direction = m_pPlayer->GetLook();
 			XMFLOAT3 xmf3Position = m_pPlayer->GetPosition();
@@ -261,7 +261,7 @@ void CScene::CreateMissile() {
 			m_pMissile[i]->SetMovingDirection(xmf3Direction);
 
 			m_pMissile[i]->moveDistance = 0;
-			m_pMissile[i]->activateState = true;
+			m_pMissile[i]->ActivateState = true;
 			break;
 		}
 	}
@@ -271,7 +271,7 @@ void CScene::CreateMissile() {
 // ufo 미사일 생성
 void CScene::CreateUfoMissile(int i) {
 	for (int j = 0; j < m_nUfoMissiles; ++j) {
-		if (!m_pUfoMissile[j]->activateState) {
+		if (!m_pUfoMissile[j]->ActivateState) {
 			XMFLOAT3 xmf3Up = m_pUfo[i]->GetUp();
 			XMFLOAT3 xmf3Direction = m_pUfo[i]->GetLook();
 			XMFLOAT3 xmf3Position = m_pUfo[i]->GetPosition();
@@ -284,7 +284,7 @@ void CScene::CreateUfoMissile(int i) {
 			m_pUfoMissile[j]->SetMovingDirection(xmf3Direction);
 
 			m_pUfoMissile[j]->moveDistance = 0;
-			m_pUfoMissile[j]->activateState = true;
+			m_pUfoMissile[j]->ActivateState = true;
 			break;
 		}
 	}
@@ -297,9 +297,9 @@ void CScene::CreateUfoMissile(int i) {
 void CScene::PlayerMissileToUfoCollision() {
 	for (int i = 0; i < m_nMissiles; ++i) {
 		for (int j = 0; j < m_nUfos; ++j) {
-			if (m_pMissile[i]->activateState && !m_pUfo[j]->UfoDead && m_pUfo[j]->m_xmOOBB.Intersects(m_pMissile[i]->m_xmOOBB)) {
-				m_pMissile[i]->activateState = false;
-				m_pUfo[j]->acc = 20.0;
+			if (m_pMissile[i]->ActivateState && !m_pUfo[j]->UfoDead && m_pUfo[j]->m_xmOOBB.Intersects(m_pMissile[i]->m_xmOOBB)) {
+				m_pMissile[i]->ActivateState = false;
+				m_pUfo[j]->FallingAcc = 20.0;
 				m_pUfo[j]->UfoDead = true;
 			}
 		}
@@ -309,8 +309,35 @@ void CScene::PlayerMissileToUfoCollision() {
 // ufo 미사일 - 플레이어 충돌 처리
 void CScene::UfoMissileToPlayerCollision() {
 	for (int i = 0; i < m_nUfoMissiles; ++i) {
-		if (m_pUfoMissile[i]->activateState && m_pPlayer->m_xmOOBB.Intersects(m_pUfoMissile[i]->m_xmOOBB)) {
-			m_pUfoMissile[i]->activateState = false;
+		if (m_pUfoMissile[i]->ActivateState && m_pPlayer->m_xmOOBB.Intersects(m_pUfoMissile[i]->m_xmOOBB)) {
+
+			// 쉴드 활성화 상태일 때는 쉴드가 대미지를 받는다
+			if (m_pPlayer->ShieldState) {
+				m_pShield->ShieldHP -= 0.025;
+
+				// 체력이 떨어질 수록 빨간색으로 변한다
+				m_pShield->SetColor(XMFLOAT3(1.0 - m_pShield->ShieldHP, m_pShield->ShieldHP, 0.0));
+
+				// 쉴드의 체력이 완전히 떨어지면 더 이상 쉴드를 활성화 할 수 없다
+				if (m_pShield->ShieldHP <= 0) {
+					m_pPlayer->ShieldState = false;
+					m_pPlayer->ShieldAvailableState = false;
+					m_pShield->ShieldHP = 0;
+				}
+			}
+
+			// 그렇지 않다면 플레이어가 대미지를 받는다
+			else {
+				m_pPlayer->PlayerHP -= 0.025;
+
+				// 체력이 떨어질 수록 빨간색으로 변한다
+				m_pPlayer->SetColor(XMFLOAT3(1.0 - m_pPlayer->PlayerHP, 0.0, m_pPlayer->PlayerHP));
+
+				if (m_pPlayer->PlayerHP <= 0)
+					m_pPlayer->PlayerHP = 0;
+			}
+
+			m_pUfoMissile[i]->ActivateState = false;
 		}
 	}
 }

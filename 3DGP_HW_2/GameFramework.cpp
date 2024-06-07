@@ -348,14 +348,18 @@ void CGameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPA
 	{
 	case WM_KEYDOWN:
 		switch (wParam) {
-		case 'Z':
-			if (!m_pPlayer->shieldState)
-				m_pPlayer->shieldState = true;
+		case 'Z':  // 쉴드 활성화 / 비활성화
+			// 쉴드 사용 가능 상태가 false이면 키 입력을 받지 않는다
+			if (m_pScene->m_pShield->ShieldHP == 0)
+				break;
+
+			if (!m_pPlayer->ShieldState)
+				m_pPlayer->ShieldState = true;
 			else
-				m_pPlayer->shieldState = false;
+				m_pPlayer->ShieldState = false;
 			break;
 
-			// 미사일 생성
+			// 플레이어 미사일 발사
 		case VK_SPACE:
 			m_pScene->CreateMissile();
 			break;
@@ -370,14 +374,6 @@ void CGameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPA
 			break;
 		case VK_RETURN:
 			break;
-			/*case VK_F1:
-			case VK_F2:
-			case VK_F3:
-				m_pCamera = m_pPlayer->ChangeCamera((DWORD)(wParam - VK_F1 + 1), m_GameTimer.GetTimeElapsed());
-				break;
-			case VK_F9:
-				ChangeSwapChainState();
-				break;*/
 
 		default:
 			break;
