@@ -48,12 +48,13 @@ void CGameObject::SetShader(CShader* pShader)
 // Ufo 피격 후 재생성
 void CGameObject::RegenUfo() {
 	std::random_device rd;
-	std::uniform_real_distribution uidX{ -29.0, 29.0 };
-	std::uniform_real_distribution uidY{ -6.0, 6.0 };
+	std::uniform_real_distribution urdX{ -29.0, 29.0 };
+	std::uniform_real_distribution urdY{ -20.0, 20.0 };
+	std::uniform_real_distribution urdZ{ -6.0, 6.0 };
 
-	EnemyPosition.x = uidX(rd);
-	EnemyPosition.y = uidY(rd);
-	EnemyPosition.z = 20.0;
+	EnemyPosition.x = urdX(rd);
+	EnemyPosition.y = urdZ(rd);
+	EnemyPosition.z = urdY(rd);
 
 	m_xmf4x4World = Matrix4x4::Identity();
 	SetPosition(EnemyPosition);

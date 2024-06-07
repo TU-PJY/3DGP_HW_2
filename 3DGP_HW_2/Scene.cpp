@@ -187,8 +187,13 @@ void CScene::AnimateObjects(float fTimeElapsed){
 
 	// m_pUfo
 	for (int i = 0; i < m_nUfos; i++) {
+		// ufo는 플레이어를 바라본다
+		if(!m_pUfo[i]->UfoDead)
+			m_pUfo[i]->LookAt(m_pPlayer->GetPosition(), XMFLOAT3(0.0f, 1.0f, 0.0f));
+
 		m_pUfo[i]->AnimateUfo(fTimeElapsed);
 
+		// 미사일 생성 딜레이가 0 이하가 되면 새로운 미사일을 생성한다
 		if (m_pUfo[i]->UfoMissileDelay <= 0)
 			CreateUfoMissile(i);
 
@@ -203,7 +208,7 @@ void CScene::AnimateObjects(float fTimeElapsed){
 		}
 	}
 
-	CheckObjectByBulletCollisions();
+	PlayerMissileToUfoCollision();
 }
 
 
@@ -288,10 +293,10 @@ void CScene::CreateUfoMissile(int i) {
 
 
 // 플레이어 미사일 - ufo 충돌 처리
-void CScene::CheckObjectByBulletCollisions() {
+void CScene::PlayerMissileToUfoCollision() {
 	for (int i = 0; i < m_nMissiles; ++i) {
 		for (int j = 0; j < m_nUfos; ++j) {
-			if (m_pMissile[i]->activateState && m_pUfo[j]->m_xmOOBB.Intersects(m_pMissile[i]->m_xmOOBB)) {
+			if (m_pMissile[i]->activateState && !m_pUfo[j]->UfoDead && m_pUfo[j]->m_xmOOBB.Intersects(m_pMissile[i]->m_xmOOBB)) {
 				m_pMissile[i]->activateState = false;
 				m_pUfo[j]->acc = 20.0;
 				m_pUfo[j]->UfoDead = true;

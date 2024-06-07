@@ -36,7 +36,7 @@ public:
 
 	void ReleaseUploadBuffers();
 
-	void CheckObjectByBulletCollisions();
+	void PlayerMissileToUfoCollision();
 
 protected:
 	ID3D12RootSignature* m_pd3dGraphicsRootSignature = NULL;
