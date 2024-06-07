@@ -106,7 +106,7 @@ void CGameObject::AnimateUfoMissile(float fTimeElapsed, CPlayer* player) {
 	xmvToLockedObject = XMVector3Normalize(xmvToLockedObject);
 
 	XMVECTOR xmvMovingDirection = XMLoadFloat3(&m_xmf3MovingDirection);
-	xmvMovingDirection = XMVector3Normalize(XMVectorLerp(xmvMovingDirection, xmvToLockedObject, 0.25f));
+	xmvMovingDirection = XMVector3Normalize(XMVectorLerp(xmvMovingDirection, xmvToLockedObject, 10.0 * fTimeElapsed));
 	XMStoreFloat3(&m_xmf3MovingDirection, xmvMovingDirection);
 
 	LookTo(m_xmf3MovingDirection, XMFLOAT3(0.0, 1.0, 0.0));
