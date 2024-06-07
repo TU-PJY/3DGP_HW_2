@@ -43,12 +43,24 @@ void CGameObject::SetShader(CShader* pShader)
 
 void CGameObject::Animate(float fTimeElapsed)
 {
-	EnemyPosition.x += fTimeElapsed * MoveDirection * 10;
+	// ufo 미사일 피격 전
+	if (!UfoDead) {
+		EnemyPosition.x += fTimeElapsed * MoveDirection * 10;
 
-	if (EnemyPosition.x > 20.0 || EnemyPosition.x < -20.0)
-		MoveDirection *= -1;
+		if (EnemyPosition.x > 20.0 || EnemyPosition.x < -20.0)
+			MoveDirection *= -1;
 
-	this->SetPosition(EnemyPosition);
+		this->SetPosition(EnemyPosition);
+	}
+
+	// ufo 미사일 피격 후
+	else {
+		EnemyPosition.y += acc* fTimeElapsed;
+		acc -= 40 * fTimeElapsed;
+
+		this->SetPosition(EnemyPosition);
+		this->Rotate(800 * fTimeElapsed, 800 * fTimeElapsed, 800 * fTimeElapsed);
+	}
 }
 
 // shield
@@ -91,11 +103,13 @@ void CGameObject::Render(ID3D12GraphicsCommandList* pd3dCommandList, CCamera* pC
 {
 	OnPrepareRender();
 
-	if (m_pShader) m_pShader->Render(pd3dCommandList, pCamera);
+	if (m_pShader) 
+		m_pShader->Render(pd3dCommandList, pCamera);
 
 	UpdateShaderVariables(pd3dCommandList);
 
-	if (m_pMesh) m_pMesh->Render(pd3dCommandList);
+	if (m_pMesh) 
+		m_pMesh->Render(pd3dCommandList);
 }
 
 void CGameObject::ReleaseUploadBuffers()

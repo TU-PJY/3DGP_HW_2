@@ -224,14 +224,15 @@ void CScene::CreateMissile() {
 	}
 }
 
-// 미사일 - ufo 충돌 처리
+// 플레이어 미사일 - ufo 충돌 처리
 void CScene::CheckObjectByBulletCollisions() {
 	for (int i = 0; i < m_nMissiles; ++i) {
 		for (int j = 0; j < m_nObjects; ++j) {
 			if (m_pMissile[i]->activateState && m_ppObjects[j]->m_xmOOBB.Intersects(m_pMissile[i]->m_xmOOBB)) {
 				m_pMissile[i]->activateState = false;
+				m_ppObjects[j]->acc = 40.0;
+				m_ppObjects[j]->UfoDead = true;
 			}
 		}
 	}
-
 }

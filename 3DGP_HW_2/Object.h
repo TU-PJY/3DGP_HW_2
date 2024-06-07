@@ -19,17 +19,21 @@ public:
 public:
 	XMFLOAT4X4						m_xmf4x4World;
 	CMesh* m_pMesh = NULL;
-
 	CShader* m_pShader = NULL;
-
 	XMFLOAT3						m_xmf3Color = XMFLOAT3(1.0f, 1.0f, 1.0f);
 
 	// UFO가 움직이는 방향 및 위치
 	XMFLOAT3 EnemyPosition{ 1.0f, 1.0f, 1.0f };
 	int MoveDirection{};
 
+	// UFO가 플레이어 미사일 피격 시 활성화
+	bool UfoDead{};
+
 	// 미사일이 출력되고 업데이트 되는 여부
 	bool activateState{};
+
+	// ufo 피격 시 사용되는 가속값
+	float acc;
 
 	// 미사일 날아가는 방향
 	XMFLOAT3					m_xmf3MovingDirection = XMFLOAT3(0.0f, 0.0f, 1.0f);
