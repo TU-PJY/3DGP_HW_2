@@ -13,7 +13,7 @@ CGameObject::CGameObject(XMFLOAT3 Position)
 	m_xmf4x4World = Matrix4x4::Identity();
 	EnemyPosition = Position;
 
-	UfoMissileDelay = 20;
+	UfoMissileDelay = 40;
 
 	// 음수이면 오른쪽, 양수이면 왼쪽으로 움직이도록 방향 설정
 	if (Position.x < 0) MoveDirection = 1;
@@ -61,7 +61,7 @@ void CGameObject::RegenUfo() {
 	Rotate(0.0, 180.0, 0.0);
 
 	acc = 0;
-	UfoMissileDelay = 20;
+	UfoMissileDelay = 40;
 	UfoDead = false;
 }
 
@@ -70,8 +70,6 @@ void CGameObject::AnimateUfo(float fTimeElapsed)
 {
 	// ufo 미사일 피격 전
 	if (!UfoDead) {
-		
-
 		EnemyPosition.x += fTimeElapsed * MoveDirection * 10;
 
 		if (EnemyPosition.x > 30.0 || EnemyPosition.x < -30.0)
@@ -98,7 +96,20 @@ void CGameObject::AnimateUfo(float fTimeElapsed)
 
 
 // ufo missile
-void CGameObject::AnimateUfoMissile(float fTimeElapsed) {
+void CGameObject::AnimateUfoMissile(float fTimeElapsed, CPlayer* player) {
+	XMFLOAT3 xmf3Position = GetPosition();
+	XMVECTOR xmvPosition = XMLoadFloat3(&xmf3Position);
+
+	XMFLOAT3 xmf3LockedObjectPosition = player->GetPosition();
+	XMVECTOR xmvLockedObjectPosition = XMLoadFloat3(&xmf3LockedObjectPosition);
+	XMVECTOR xmvToLockedObject = xmvLockedObjectPosition - xmvPosition;
+	xmvToLockedObject = XMVector3Normalize(xmvToLockedObject);
+
+	XMVECTOR xmvMovingDirection = XMLoadFloat3(&m_xmf3MovingDirection);
+	xmvMovingDirection = XMVector3Normalize(XMVectorLerp(xmvMovingDirection, xmvToLockedObject, 0.25f));
+	XMStoreFloat3(&m_xmf3MovingDirection, xmvMovingDirection);
+
+	LookTo(m_xmf3MovingDirection, XMFLOAT3(0.0, 1.0, 0.0));
 	Move(m_xmf3MovingDirection, 100 * fTimeElapsed);
 	moveDistance += fTimeElapsed * 100;
 

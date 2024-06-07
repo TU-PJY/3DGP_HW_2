@@ -203,7 +203,7 @@ void CScene::AnimateObjects(float fTimeElapsed){
 	// m_pUfoMissile
 	for (int i = 0; i < m_nUfoMissiles; ++i) {
 		if (m_pUfoMissile[i]->activateState) {
-			m_pUfoMissile[i]->AnimateUfoMissile(fTimeElapsed);
+			m_pUfoMissile[i]->AnimateUfoMissile(fTimeElapsed, m_pPlayer);
 			m_pUfoMissile[i]->UpdateBoundingBox();
 		}
 	}
@@ -288,7 +288,7 @@ void CScene::CreateUfoMissile(int i) {
 		}
 	}
 
-	m_pUfo[i]->UfoMissileDelay = 20;
+	m_pUfo[i]->UfoMissileDelay = 40;
 }
 
 

@@ -39,7 +39,7 @@ public:
 	void RegenUfo();
 
 	// ufo 미사일 업데이트
-	void AnimateUfoMissile(float fTimeElapsed);
+	void AnimateUfoMissile(float fTimeElapsed, CPlayer* player);
 
 	// 미사일이 출력되고 업데이트 되는 여부
 	bool activateState{};
