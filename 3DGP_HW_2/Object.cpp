@@ -110,7 +110,7 @@ void CGameObject::AnimateUfoMissile(float fTimeElapsed, CPlayer* player) {
 	xmvToTargetObject = XMVector3Normalize(xmvToTargetObject);
 
 	XMVECTOR xmvMovingDirection = XMLoadFloat3(&m_xmf3MovingDirection);
-	xmvMovingDirection = XMVector3Normalize(XMVectorLerp(xmvMovingDirection, xmvToTargetObject, 10.0 * fTimeElapsed));
+	xmvMovingDirection = XMVector3Normalize(XMVectorLerp(xmvMovingDirection, xmvToTargetObject, 12.0 * fTimeElapsed));
 	XMStoreFloat3(&m_xmf3MovingDirection, xmvMovingDirection);
 
 	LookTo(m_xmf3MovingDirection, XMFLOAT3(0.0, 1.0, 0.0));
@@ -147,7 +147,7 @@ void CGameObject::AnimateMissile(float fTimeElapsed) {
 		xmvToTargetObject = XMVector3Normalize(xmvToTargetObject);
 
 		XMVECTOR xmvMovingDirection = XMLoadFloat3(&m_xmf3MovingDirection);
-		xmvMovingDirection = XMVector3Normalize(XMVectorLerp(xmvMovingDirection, xmvToTargetObject, 10.0 * fTimeElapsed));
+		xmvMovingDirection = XMVector3Normalize(XMVectorLerp(xmvMovingDirection, xmvToTargetObject, 12.0 * fTimeElapsed));
 		XMStoreFloat3(&m_xmf3MovingDirection, xmvMovingDirection);
 
 		LookTo(m_xmf3MovingDirection, XMFLOAT3(0.0, 1.0, 0.0));
@@ -361,8 +361,10 @@ void CScene::PickObjectPointedByCursor(int xClient, int yClient, CCamera* pCamer
 		nIntersected = m_pUfo[i]->PickObjectByRayIntersection(xmvPickPosition, xmmtxView, &fHitDistance);
 
 		if ((nIntersected > 0) && (fHitDistance < fNearestHitDistance)) {
-			m_pUfo[i]->SetColor(XMFLOAT3(0.0, 0.8, 0.0));
-			m_pUfo[i]->UfoPickedState = true;
+			if (!m_pUfo[i]->UfoDead) {
+				m_pUfo[i]->SetColor(XMFLOAT3(0.0, 0.8, 0.0));
+				m_pUfo[i]->UfoPickedState = true;
+			}
 			break;
 		}
 	}
