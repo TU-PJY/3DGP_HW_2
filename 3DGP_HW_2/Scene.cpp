@@ -346,7 +346,7 @@ void CScene::UfoMissileToPlayerCollision() {
 
 			// 쉴드 활성화 상태일 때는 쉴드가 대미지를 받는다
 			if (m_pPlayer->ShieldState) {
-				m_pShield->ShieldHP -= 0.025;
+				m_pShield->ShieldHP -= 0.0125;
 
 				// 체력이 떨어질 수록 빨간색으로 변한다
 				m_pShield->SetColor(XMFLOAT3(1.0 - m_pShield->ShieldHP, m_pShield->ShieldHP, 0.0));
@@ -360,7 +360,7 @@ void CScene::UfoMissileToPlayerCollision() {
 
 			// 그렇지 않다면 플레이어가 대미지를 받는다
 			else {
-				m_pPlayer->PlayerHP -= 0.025;
+				m_pPlayer->PlayerHP -= 0.0125;
 
 				// 체력이 떨어질 수록 빨간색으로 변한다
 				m_pPlayer->SetColor(XMFLOAT3(1.0 - m_pPlayer->PlayerHP, 0.0, m_pPlayer->PlayerHP));
