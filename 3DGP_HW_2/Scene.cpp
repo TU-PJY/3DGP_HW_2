@@ -401,6 +401,9 @@ void CScene::ResetGame() {
 	m_pStartMenu->m_xmf4x4World = Matrix4x4::Identity();
 	m_pStartMenu->SetPosition(XMFLOAT3(0.0, 3.0, -4.0));
 
+	// 마우스 클릭 상태 해제
+	::ReleaseCapture();
+
 	// 게임 동작 상태 비활성화
 	GameRunningState = false;
 }
