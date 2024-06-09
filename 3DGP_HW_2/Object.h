@@ -54,8 +54,8 @@ public:
 	float UfoMissileDelay{};
 
 
-	// 미사일 회전 각도
-	float MissileRoll{};
+	// 오브젝트 roll 회전 각도
+	float ObjectRoll{};
 
 	// 플레이어 미사일 추격 대상 객체
 	CGameObject* Target{};

@@ -116,10 +116,10 @@ void CGameObject::AnimateUfoMissile(float fTimeElapsed, CPlayer* player) {
 	LookTo(m_xmf3MovingDirection, XMFLOAT3(0.0, 1.0, 0.0));
 	Move(m_xmf3MovingDirection, 100 * fTimeElapsed);
 
-	Rotate(0.0, 0.0, MissileRoll);
+	Rotate(0.0, 0.0, ObjectRoll);
 
 	MissileMoveDistance += fTimeElapsed * 100;
-	MissileRoll += 400 * fTimeElapsed;
+	ObjectRoll += 400 * fTimeElapsed;
 
 	// 일정 거리 이상 이동하면 비활성화 된다
 	if (MissileMoveDistance > 250)
@@ -153,11 +153,11 @@ void CGameObject::AnimateMissile(float fTimeElapsed) {
 		LookTo(m_xmf3MovingDirection, XMFLOAT3(0.0, 1.0, 0.0));
 		Move(m_xmf3MovingDirection, 100 * fTimeElapsed);
 
-		MissileRoll += fTimeElapsed * 400;
+		ObjectRoll += fTimeElapsed * 400;
 		MissileMoveDistance += fTimeElapsed * 100;
 
 		// 미사일이 회전하면서 날아간다
-		Rotate(0.0, 0.0, MissileRoll);
+		Rotate(0.0, 0.0, ObjectRoll);
 	}
 
 	else {

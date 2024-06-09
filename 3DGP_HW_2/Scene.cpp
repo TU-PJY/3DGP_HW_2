@@ -267,7 +267,7 @@ void CScene::CreateMissile() {
 			XMFLOAT3 xmf3Up = m_pPlayer->GetUp();
 			XMFLOAT3 xmf3Direction = m_pPlayer->GetLook();
 			XMFLOAT3 xmf3Position = m_pPlayer->GetPosition();
-			XMFLOAT3 xmf3FirePosition = Vector3::Add(xmf3Position, Vector3::ScalarProduct(xmf3Direction, -4.0f, false));
+			XMFLOAT3 xmf3FirePosition = Vector3::Add(xmf3Position, Vector3::ScalarProduct(xmf3Direction, 0.0f, false));
 
 			m_pMissile[i]->m_xmf4x4World = Matrix4x4::Identity();
 
@@ -276,7 +276,7 @@ void CScene::CreateMissile() {
 			m_pMissile[i]->SetMovingDirection(xmf3Direction);
 
 			m_pMissile[i]->MissileMoveDistance = 0;
-			m_pMissile[i]->MissileRoll = 0;
+			m_pMissile[i]->ObjectRoll = 0;
 
 			// 피킹된 ufo가 존재하면 미사일에 추적할 대상 지정
 			for (int j = 0; j < m_nUfos; ++j) {
@@ -302,7 +302,7 @@ void CScene::CreateUfoMissile(int i) {
 			XMFLOAT3 xmf3Up = m_pUfo[i]->GetUp();
 			XMFLOAT3 xmf3Direction = m_pUfo[i]->GetLook();
 			XMFLOAT3 xmf3Position = m_pUfo[i]->GetPosition();
-			XMFLOAT3 xmf3FirePosition = Vector3::Add(xmf3Position, Vector3::ScalarProduct(xmf3Direction, -4.0f, false));
+			XMFLOAT3 xmf3FirePosition = Vector3::Add(xmf3Position, Vector3::ScalarProduct(xmf3Direction, 0.0f, false));
 
 			m_pUfoMissile[j]->m_xmf4x4World = Matrix4x4::Identity();
 
@@ -311,7 +311,7 @@ void CScene::CreateUfoMissile(int i) {
 			m_pUfoMissile[j]->SetMovingDirection(xmf3Direction);
 
 			m_pUfoMissile[j]->MissileMoveDistance = 0;
-			m_pUfoMissile[j]->MissileRoll = 0;
+			m_pUfoMissile[j]->ObjectRoll = 0;
 			m_pUfoMissile[j]->ActivateState = true;
 			break;
 		}
