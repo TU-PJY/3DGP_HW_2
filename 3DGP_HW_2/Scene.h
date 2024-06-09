@@ -5,6 +5,7 @@
 #pragma once
 
 #include "Shader.h"
+#include "Object.h"
 
 class CScene
 {
@@ -41,6 +42,7 @@ public:
 
 	void PlayerMissileToUfoCollision();
 	void UfoMissileToPlayerCollision();
+	void PickObjectPointedByCursor(int xClient, int yClient, CCamera* pCamera);
 
 	CGameObject* m_pShield{};
 

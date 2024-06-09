@@ -97,7 +97,7 @@ void CScene::BuildObjects(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList* p
 	m_pStartMenu = new CGameObject(XMFLOAT3(0.0, 0.0, 0.0));
 	m_pStartMenu->SetMesh(pStartMenuMesh);
 	m_pStartMenu->SetShader(pShader);
-	m_pStartMenu->SetColor(XMFLOAT3(0.0, 0.0, 0.0));
+	m_pStartMenu->SetColor(XMFLOAT3(1.0, 1.0, 0.0));
 	m_pStartMenu->SetPosition(XMFLOAT3(0.0, 3.0, -4.0));
 	m_pStartMenu->Rotate(0.0, 180.0, 0.0);
 }
@@ -276,6 +276,17 @@ void CScene::CreateMissile() {
 			m_pMissile[i]->SetMovingDirection(xmf3Direction);
 
 			m_pMissile[i]->moveDistance = 0;
+
+			// 피킹된 ufo가 존재하면 미사일에 추적할 대상 지정
+			for (int j = 0; j < m_nUfos; ++j) {
+				if (m_pUfo[j]->UfoPickedState) {
+					m_pUfo[j]->UfoPickedState = false;
+					m_pUfo[j]->SetColor(XMFLOAT3(0.7, 0.0, 0.0));
+					m_pMissile[i]->Target = m_pUfo[j];
+					break;
+				}
+			}
+
 			m_pMissile[i]->ActivateState = true;
 			break;
 		}
@@ -314,12 +325,17 @@ void CScene::PlayerMissileToUfoCollision() {
 		for (int j = 0; j < m_nUfos; ++j) {
 			if (m_pMissile[i]->ActivateState && !m_pUfo[j]->UfoDead && m_pUfo[j]->m_xmOOBB.Intersects(m_pMissile[i]->m_xmOOBB)) {
 				m_pMissile[i]->ActivateState = false;
+				m_pMissile[i]->Target = nullptr;
+
 				m_pUfo[j]->FallingAcc = 20.0;
+				m_pUfo[i]->UfoPickedState = false;
+				m_pUfo[j]->SetColor(XMFLOAT3(0.0, 0.0, 0.0));
 				m_pUfo[j]->UfoDead = true;
 			}
 		}
 	}
 }
+
 
 // ufo 미사일 - 플레이어 충돌 처리
 void CScene::UfoMissileToPlayerCollision() {
@@ -377,8 +393,10 @@ void CScene::ResetGame() {
 	m_pPlayer->m_fYaw = 0.0f;
 
 	// 플레이어 미사일 모두 비활성화
-	for (int i = 0; i < m_nMissiles; ++i)
+	for (int i = 0; i < m_nMissiles; ++i) {
+		m_pMissile[i]->Target = nullptr;
 		m_pMissile[i]->ActivateState = false;
+	}
 
 	// ufo 미사일 모두 비활성화
 	for (int i = 0; i < m_nUfoMissiles; ++i)
@@ -387,8 +405,10 @@ void CScene::ResetGame() {
 	// ufo 초기화
 	for (int i = 0; i < m_nUfos; ++i) {
 		m_pUfo[i]->m_xmf4x4World = Matrix4x4::Identity();
-		m_pUfo[i]->UfoDead = false;
 		m_pUfo[i]->UfoMissileDelay = 40;
+		m_pUfo[i]->UfoPickedState = false;
+		m_pUfo[i]->UfoDead = false;
+		m_pUfo[i]->SetColor(XMFLOAT3(0.7, 0.0, 0.0));
 	}
 
 	// 초기 위치로 이동

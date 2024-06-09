@@ -323,19 +323,28 @@ void CGameFramework::ChangeSwapChainState()
 
 void CGameFramework::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
 {
-	switch (nMessageID)
-	{
+	switch (nMessageID){
 	case WM_LBUTTONDOWN:
 	case WM_RBUTTONDOWN:
 		::SetCapture(hWnd);
 		::GetCursorPos(&m_ptOldCursorPos);
 		break;
+
+	// ufo 피킹
+	case WM_MBUTTONDOWN:
+		if (m_pScene->GameRunningState)
+			m_pScene->PickObjectPointedByCursor(LOWORD(lParam), HIWORD(lParam), m_pPlayer->m_pCamera);
+		break;
+
 	case WM_LBUTTONUP:
 	case WM_RBUTTONUP:
+	case WM_MBUTTONUP:
 		::ReleaseCapture();
 		break;
+
 	case WM_MOUSEMOVE:
 		break;
+
 	default:
 		break;
 	}
@@ -344,12 +353,11 @@ void CGameFramework::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM
 void CGameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
 {
 	DWORD dwDirection = 0;
-	switch (nMessageID)
-	{
+	switch (nMessageID){
 	case WM_KEYDOWN:
 		switch (wParam) {
 		case 'Z':  // 쉴드 활성화 / 비활성화
-			// 쉴드 사용 가능 상태가 false이거나 게임을 시작한 상태가 아니라면 키 입력을 받지 않는다
+			// 쉴드의 체력이 0이거나 게임을 시작한 상태가 아니라면 키 입력을 받지 않는다
 			if (m_pScene->m_pShield->ShieldHP > 0 && m_pScene->GameRunningState) {
 				if (!m_pPlayer->ShieldState)
 					m_pPlayer->ShieldState = true;
@@ -372,11 +380,11 @@ void CGameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPA
 		break;
 
 	case WM_KEYUP:
-		switch (wParam)
-		{
+		switch (wParam){
 		case VK_ESCAPE:
 			::PostQuitMessage(0);
 			break;
+
 		case VK_RETURN:
 			break;
 
@@ -384,6 +392,7 @@ void CGameFramework::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPA
 			break;
 		}
 		break;
+
 	default:
 		break;
 	}
@@ -403,11 +412,15 @@ LRESULT CALLBACK CGameFramework::OnProcessingWindowMessage(HWND hWnd, UINT nMess
 	}
 	case WM_SIZE:
 		break;
+
 	case WM_LBUTTONDOWN:
 	case WM_RBUTTONDOWN:
+	case WM_MBUTTONDOWN:
 	case WM_LBUTTONUP:
 	case WM_RBUTTONUP:
+	case WM_MBUTTONUP:
 	case WM_MOUSEMOVE:
+		// 게임 시작 상태가 활성화 되었을 때만 마우스 입력을 받는다
 		if (m_pScene->GameRunningState)
 			OnProcessingMouseMessage(hWnd, nMessageID, wParam, lParam);
 		break;
@@ -459,6 +472,7 @@ void CGameFramework::BuildObjects()
 	CAirplanePlayer* pAirplanePlayer = new CAirplanePlayer(m_pd3dDevice, m_pd3dCommandList, m_pScene->GetGraphicsRootSignature());
 	m_pPlayer = pAirplanePlayer;
 
+	// scene에 플레이어 객체 전달
 	m_pScene->InputPlayer(m_pPlayer);
 
 	m_pCamera = m_pPlayer->GetCamera();

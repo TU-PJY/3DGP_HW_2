@@ -44,13 +44,18 @@ public:
 	// UFO가 플레이어 미사일 피격 시 활성화
 	bool UfoDead{};
 
+	// UFO가 피킹된 상태
+	bool UfoPickedState{};
+
 	// ufo 피격 시 사용되는 가속값
 	float FallingAcc{};
 
 	// ufo 미사일 생성 딜레이
 	float UfoMissileDelay{};
 
-	
+
+	// 플레이어 미사일 추격 대상 객체
+	CGameObject* Target{};
 
 	// 미사일 날아가는 방향 지정
 	void SetMovingDirection(XMFLOAT3& xmf3MovingDirection);
@@ -59,7 +64,7 @@ public:
 	void AnimateUfoMissile(float fTimeElapsed, CPlayer* player);
 
 	// 플레이어 미사일 업데이트
-	void AnimateMissile(float fTimeElapsed);
+	void AnimateMissile(float fTimeElapse);
 
 	// 미사일 위치 이동
 	void Move(XMFLOAT3& vDirection, float fSpeed);
@@ -74,7 +79,7 @@ public:
 	double moveDistance{};
 
 
-
+	// 시작 매뉴 애니메이션
 	void AnimateStartMenu(float fTimeElapsed);
 
 
@@ -111,8 +116,15 @@ public:
 
 	void Rotate(float fPitch = 10.0f, float fYaw = 10.0f, float fRoll = 10.0f);
 	void Rotate(XMFLOAT3* pxmf3Axis, float fAngle);
-
+	
+	// OOBB 업데이트
 	void UpdateBoundingBox();
+
+	// 피킹 레이 생성
+	void GenerateRayForPicking(XMVECTOR& xmvPickPosition, XMMATRIX& xmmtxView, XMVECTOR& xmvPickRayOrigin, XMVECTOR& xmvPickRayDirection);
+	
+	// 마우스 피킹
+	int PickObjectByRayIntersection(XMVECTOR& xmvPickPosition, XMMATRIX& xmmtxView, float* pfHitDistance);
 };
 
 class CUfoObject : public CGameObject

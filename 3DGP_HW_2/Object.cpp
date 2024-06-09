@@ -6,6 +6,8 @@
 #include "Object.h"
 #include "Shader.h"
 #include "Player.h"
+#include "Scene.h"
+#include <cmath>
 #include <random>
 
 CGameObject::CGameObject(XMFLOAT3 Position)
@@ -59,14 +61,14 @@ void CGameObject::RegenUfo() {
 	m_xmf4x4World = Matrix4x4::Identity();
 	SetPosition(EnemyPosition);
 
-	FallingAcc = 0;
+	SetColor(XMFLOAT3(0.7, 0.0, 0.0));
 	UfoMissileDelay = 40;
+	UfoPickedState = false;
 	UfoDead = false;
 }
 
 
-void CGameObject::AnimateUfo(float fTimeElapsed)
-{
+void CGameObject::AnimateUfo(float fTimeElapsed) {
 	// ufo 미사일 피격 전
 	if (!UfoDead) {
 		EnemyPosition.x += fTimeElapsed * MoveDirection * 10;
@@ -105,7 +107,7 @@ void CGameObject::AnimateUfoMissile(float fTimeElapsed, CPlayer* player) {
 	xmvToLockedObject = XMVector3Normalize(xmvToLockedObject);
 
 	XMVECTOR xmvMovingDirection = XMLoadFloat3(&m_xmf3MovingDirection);
-	xmvMovingDirection = XMVector3Normalize(XMVectorLerp(xmvMovingDirection, xmvToLockedObject, 10.0 * fTimeElapsed));
+	xmvMovingDirection = XMVector3Normalize(XMVectorLerp(xmvMovingDirection, xmvToLockedObject, 5.0 * fTimeElapsed));
 	XMStoreFloat3(&m_xmf3MovingDirection, xmvMovingDirection);
 
 	LookTo(m_xmf3MovingDirection, XMFLOAT3(0.0, 1.0, 0.0));
@@ -122,17 +124,46 @@ void CGameObject::AnimateUfoMissile(float fTimeElapsed, CPlayer* player) {
 
 // shield
 void CGameObject::AnimateShield(XMFLOAT3 position, float fTimeElapsed) {
-	SetPosition(position);
 	Rotate(50 * fTimeElapsed, 50 * fTimeElapsed, 50 * fTimeElapsed);
+	SetPosition(position);
 }
 
 
 // missile
+// 피킹된 ufo가 존재하면 해당 ufo를 향해 날아간다
 void CGameObject::AnimateMissile(float fTimeElapsed) {
-	Move(m_xmf3MovingDirection, 100 * fTimeElapsed);
-	moveDistance += fTimeElapsed * 100;
+	if (Target && !Target->UfoDead) {
+		XMFLOAT3 xmf3Position = GetPosition();
+		XMVECTOR xmvPosition = XMLoadFloat3(&xmf3Position);
 
-	Rotate(0.0, 0.0, 400 * fTimeElapsed);
+		XMFLOAT3 xmf3LockedObjectPosition = Target->GetPosition();
+		XMVECTOR xmvLockedObjectPosition = XMLoadFloat3(&xmf3LockedObjectPosition);
+		XMVECTOR xmvToLockedObject = xmvLockedObjectPosition - xmvPosition;
+		xmvToLockedObject = XMVector3Normalize(xmvToLockedObject);
+
+		XMVECTOR xmvMovingDirection = XMLoadFloat3(&m_xmf3MovingDirection);
+		xmvMovingDirection = XMVector3Normalize(XMVectorLerp(xmvMovingDirection, xmvToLockedObject, 10.0 * fTimeElapsed));
+		XMStoreFloat3(&m_xmf3MovingDirection, xmvMovingDirection);
+
+		LookTo(m_xmf3MovingDirection, XMFLOAT3(0.0, 1.0, 0.0));
+		Move(m_xmf3MovingDirection, 100 * fTimeElapsed);
+
+		// 날아간 거리 측정
+		moveDistance += fTimeElapsed * 100;
+
+		// 미사일이 회전하면서 날아간다
+		Rotate(0.0, 0.0, 400 * fTimeElapsed);
+	}
+
+	else {
+		Move(m_xmf3MovingDirection, 100 * fTimeElapsed);
+
+		// 날아간 거리 측정
+		moveDistance += fTimeElapsed * 100;
+
+		// 미사일이 회전하면서 날아간다
+		Rotate(0.0, 0.0, 400 * fTimeElapsed);
+	}
 
 	// 일정 거리 이상 이동하면 비활성화 된다
 	if (moveDistance > 250)
@@ -275,6 +306,63 @@ void CGameObject::Rotate(XMFLOAT3* pxmf3Axis, float fAngle)
 {
 	XMMATRIX mtxRotate = XMMatrixRotationAxis(XMLoadFloat3(pxmf3Axis), XMConvertToRadians(fAngle));
 	m_xmf4x4World = Matrix4x4::Multiply(mtxRotate, m_xmf4x4World);
+}
+
+
+void CGameObject::GenerateRayForPicking(XMVECTOR& xmvPickPosition, XMMATRIX& xmmtxView, XMVECTOR& xmvPickRayOrigin, XMVECTOR& xmvPickRayDirection)
+{
+	XMMATRIX xmmtxToModel = XMMatrixInverse(NULL, XMLoadFloat4x4(&m_xmf4x4World) * xmmtxView);
+
+	XMFLOAT3 xmf3CameraOrigin(0.0f, 0.0f, 0.0f);
+	xmvPickRayOrigin = XMVector3TransformCoord(XMLoadFloat3(&xmf3CameraOrigin), xmmtxToModel);
+	xmvPickRayDirection = XMVector3TransformCoord(xmvPickPosition, xmmtxToModel);
+	xmvPickRayDirection = XMVector3Normalize(xmvPickRayDirection - xmvPickRayOrigin);
+}
+
+
+int CGameObject::PickObjectByRayIntersection(XMVECTOR& xmvPickPosition, XMMATRIX& xmmtxView, float* pfHitDistance)
+{
+	int nIntersected = 0;
+	if (m_pMesh)
+	{
+		XMVECTOR xmvPickRayOrigin, xmvPickRayDirection;
+		GenerateRayForPicking(xmvPickPosition, xmmtxView, xmvPickRayOrigin, xmvPickRayDirection);
+		nIntersected = m_pMesh->CheckRayIntersection(xmvPickRayOrigin, xmvPickRayDirection, pfHitDistance);
+	}
+	return(nIntersected);
+}
+
+
+// ufo 피킹
+void CScene::PickObjectPointedByCursor(int xClient, int yClient, CCamera* pCamera) {
+	XMFLOAT3 xmf3PickPosition;
+	xmf3PickPosition.x = (((2.0f * xClient) / (float)pCamera->m_d3dViewport.Width) - 1) / pCamera->m_xmf4x4Projection._11;
+	xmf3PickPosition.y = -(((2.0f * yClient) / (float)pCamera->m_d3dViewport.Height) - 1) / pCamera->m_xmf4x4Projection._22;
+	xmf3PickPosition.z = 1.0f;
+
+	XMVECTOR xmvPickPosition = XMLoadFloat3(&xmf3PickPosition);
+	XMMATRIX xmmtxView = XMLoadFloat4x4(&pCamera->m_xmf4x4View);
+
+	int nIntersected = 0;
+	float fNearestHitDistance = FLT_MAX;
+
+	// 모든 ufo 피킹 상태 초기화
+	for (int i = 0; i < m_nUfos; i++) {
+		m_pUfo[i]->SetColor(XMFLOAT3(0.7, 0.0, 0.0));
+		m_pUfo[i]->UfoPickedState = false;
+	}
+
+	// 피킹이 감지된 ufo 객체는 초록색으로 색이 바뀐다
+	for (int i = 0; i < m_nUfos; i++){
+		float fHitDistance = FLT_MAX;
+		nIntersected = m_pUfo[i]->PickObjectByRayIntersection(xmvPickPosition, xmmtxView, &fHitDistance);
+
+		if ((nIntersected > 0) && (fHitDistance < fNearestHitDistance)) {
+			m_pUfo[i]->SetColor(XMFLOAT3(0.0, 0.8, 0.0));
+			m_pUfo[i]->UfoPickedState = true;
+			break;
+		}
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
