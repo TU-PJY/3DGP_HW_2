@@ -275,7 +275,8 @@ void CScene::CreateMissile() {
 			m_pMissile[i]->SetPosition(xmf3FirePosition);
 			m_pMissile[i]->SetMovingDirection(xmf3Direction);
 
-			m_pMissile[i]->moveDistance = 0;
+			m_pMissile[i]->MissileMoveDistance = 0;
+			m_pMissile[i]->MissileRoll = 0;
 
 			// 피킹된 ufo가 존재하면 미사일에 추적할 대상 지정
 			for (int j = 0; j < m_nUfos; ++j) {
@@ -309,7 +310,8 @@ void CScene::CreateUfoMissile(int i) {
 			m_pUfoMissile[j]->SetPosition(xmf3FirePosition);
 			m_pUfoMissile[j]->SetMovingDirection(xmf3Direction);
 
-			m_pUfoMissile[j]->moveDistance = 0;
+			m_pUfoMissile[j]->MissileMoveDistance = 0;
+			m_pUfoMissile[j]->MissileRoll = 0;
 			m_pUfoMissile[j]->ActivateState = true;
 			break;
 		}
@@ -328,7 +330,7 @@ void CScene::PlayerMissileToUfoCollision() {
 				m_pMissile[i]->Target = nullptr;
 
 				m_pUfo[j]->FallingAcc = 20.0;
-				m_pUfo[i]->UfoPickedState = false;
+				m_pUfo[j]->UfoPickedState = false;
 				m_pUfo[j]->SetColor(XMFLOAT3(0.0, 0.0, 0.0));
 				m_pUfo[j]->UfoDead = true;
 			}
@@ -412,10 +414,17 @@ void CScene::ResetGame() {
 	}
 
 	// 초기 위치로 이동
-	m_pUfo[0]->SetPosition(XMFLOAT3(-10.0f, 3.0f, 20.0f));
-	m_pUfo[1]->SetPosition(XMFLOAT3(10.0f, -3.0f, 20.0f));
-	m_pUfo[2]->SetPosition(XMFLOAT3(1.0f, -6.0f, 20.0f));
-	m_pUfo[3]->SetPosition(XMFLOAT3(-1.0f, 6.0f, 20.0f));
+	m_pUfo[0]->EnemyPosition = XMFLOAT3(-10.0f, 3.0f, 20.0f);
+	m_pUfo[0]->MoveDirection = -1;
+
+	m_pUfo[1]->EnemyPosition = XMFLOAT3(10.0f, -3.0f, 20.0f);
+	m_pUfo[1]->MoveDirection = 1;
+
+	m_pUfo[2]->EnemyPosition = XMFLOAT3(1.0f, -6.0f, 20.0f);
+	m_pUfo[2]->MoveDirection = -1;
+
+	m_pUfo[3]->EnemyPosition = XMFLOAT3(-1.0f, 6.0f, 20.0f);
+	m_pUfo[3]->MoveDirection = 1;
 
 	// 시작 메뉴 초기화
 	m_pStartMenu->m_xmf4x4World = Matrix4x4::Identity();

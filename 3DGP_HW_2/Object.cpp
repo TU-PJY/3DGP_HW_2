@@ -58,6 +58,9 @@ void CGameObject::RegenUfo() {
 	EnemyPosition.y = urdZ(rd);
 	EnemyPosition.z = urdY(rd);
 
+	if (EnemyPosition.x < 0) MoveDirection = 1;
+	else MoveDirection = -1;
+
 	m_xmf4x4World = Matrix4x4::Identity();
 	SetPosition(EnemyPosition);
 
@@ -101,23 +104,25 @@ void CGameObject::AnimateUfoMissile(float fTimeElapsed, CPlayer* player) {
 	XMFLOAT3 xmf3Position = GetPosition();
 	XMVECTOR xmvPosition = XMLoadFloat3(&xmf3Position);
 
-	XMFLOAT3 xmf3LockedObjectPosition = player->GetPosition();
-	XMVECTOR xmvLockedObjectPosition = XMLoadFloat3(&xmf3LockedObjectPosition);
-	XMVECTOR xmvToLockedObject = xmvLockedObjectPosition - xmvPosition;
-	xmvToLockedObject = XMVector3Normalize(xmvToLockedObject);
+	XMFLOAT3 xmf3targetPosition = player->GetPosition();
+	XMVECTOR xmvtargetPosition = XMLoadFloat3(&xmf3targetPosition);
+	XMVECTOR xmvToTargetObject = xmvtargetPosition - xmvPosition;
+	xmvToTargetObject = XMVector3Normalize(xmvToTargetObject);
 
 	XMVECTOR xmvMovingDirection = XMLoadFloat3(&m_xmf3MovingDirection);
-	xmvMovingDirection = XMVector3Normalize(XMVectorLerp(xmvMovingDirection, xmvToLockedObject, 5.0 * fTimeElapsed));
+	xmvMovingDirection = XMVector3Normalize(XMVectorLerp(xmvMovingDirection, xmvToTargetObject, 10.0 * fTimeElapsed));
 	XMStoreFloat3(&m_xmf3MovingDirection, xmvMovingDirection);
 
 	LookTo(m_xmf3MovingDirection, XMFLOAT3(0.0, 1.0, 0.0));
 	Move(m_xmf3MovingDirection, 100 * fTimeElapsed);
-	moveDistance += fTimeElapsed * 100;
 
-	Rotate(0.0, 0.0, 400 * fTimeElapsed);
+	Rotate(0.0, 0.0, MissileRoll);
+
+	MissileMoveDistance += fTimeElapsed * 100;
+	MissileRoll += 400 * fTimeElapsed;
 
 	// 일정 거리 이상 이동하면 비활성화 된다
-	if (moveDistance > 250)
+	if (MissileMoveDistance > 250)
 		ActivateState = false;
 }
 
@@ -136,37 +141,35 @@ void CGameObject::AnimateMissile(float fTimeElapsed) {
 		XMFLOAT3 xmf3Position = GetPosition();
 		XMVECTOR xmvPosition = XMLoadFloat3(&xmf3Position);
 
-		XMFLOAT3 xmf3LockedObjectPosition = Target->GetPosition();
-		XMVECTOR xmvLockedObjectPosition = XMLoadFloat3(&xmf3LockedObjectPosition);
-		XMVECTOR xmvToLockedObject = xmvLockedObjectPosition - xmvPosition;
-		xmvToLockedObject = XMVector3Normalize(xmvToLockedObject);
+		XMFLOAT3 xmf3TargetPosition = Target->GetPosition();
+		XMVECTOR xmvTargetPosition = XMLoadFloat3(&xmf3TargetPosition);
+		XMVECTOR xmvToTargetObject = xmvTargetPosition - xmvPosition;
+		xmvToTargetObject = XMVector3Normalize(xmvToTargetObject);
 
 		XMVECTOR xmvMovingDirection = XMLoadFloat3(&m_xmf3MovingDirection);
-		xmvMovingDirection = XMVector3Normalize(XMVectorLerp(xmvMovingDirection, xmvToLockedObject, 10.0 * fTimeElapsed));
+		xmvMovingDirection = XMVector3Normalize(XMVectorLerp(xmvMovingDirection, xmvToTargetObject, 10.0 * fTimeElapsed));
 		XMStoreFloat3(&m_xmf3MovingDirection, xmvMovingDirection);
 
 		LookTo(m_xmf3MovingDirection, XMFLOAT3(0.0, 1.0, 0.0));
 		Move(m_xmf3MovingDirection, 100 * fTimeElapsed);
 
-		// 날아간 거리 측정
-		moveDistance += fTimeElapsed * 100;
+		MissileRoll += fTimeElapsed * 400;
+		MissileMoveDistance += fTimeElapsed * 100;
 
 		// 미사일이 회전하면서 날아간다
-		Rotate(0.0, 0.0, 400 * fTimeElapsed);
+		Rotate(0.0, 0.0, MissileRoll);
 	}
 
 	else {
 		Move(m_xmf3MovingDirection, 100 * fTimeElapsed);
 
-		// 날아간 거리 측정
-		moveDistance += fTimeElapsed * 100;
+		MissileMoveDistance += fTimeElapsed * 100;
 
-		// 미사일이 회전하면서 날아간다
 		Rotate(0.0, 0.0, 400 * fTimeElapsed);
 	}
 
 	// 일정 거리 이상 이동하면 비활성화 된다
-	if (moveDistance > 250)
+	if (MissileMoveDistance > 250)
 		ActivateState = false;
 }
 

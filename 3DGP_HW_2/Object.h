@@ -54,8 +54,12 @@ public:
 	float UfoMissileDelay{};
 
 
+	// 미사일 회전 각도
+	float MissileRoll{};
+
 	// 플레이어 미사일 추격 대상 객체
 	CGameObject* Target{};
+
 
 	// 미사일 날아가는 방향 지정
 	void SetMovingDirection(XMFLOAT3& xmf3MovingDirection);
@@ -76,7 +80,7 @@ public:
 	XMFLOAT3 m_xmf3MovingDirection = XMFLOAT3(0.0f, 0.0f, 1.0f);
 
 	// 미사일 이동거리
-	double moveDistance{};
+	double MissileMoveDistance{};
 
 
 	// 시작 매뉴 애니메이션
