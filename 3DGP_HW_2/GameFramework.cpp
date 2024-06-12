@@ -36,7 +36,7 @@ CGameFramework::CGameFramework()
 	m_pScene = NULL;
 	m_pCamera = NULL;
 
-	_tcscpy_s(m_pszFrameRate, _T("3DGP_HW_2"));
+	_tcscpy_s(m_pszFrameRate, _T("3DGP_HW_2 ("));
 }
 
 CGameFramework::~CGameFramework()
@@ -673,6 +673,6 @@ void CGameFramework::D3D_Main()
 
 	MoveToNextFrame();
 
-	m_GameTimer.GetFrameRate(m_pszFrameRate + 12, 37);
+	m_GameTimer.GetFrameRate(m_pszFrameRate + 11, 37);
 	::SetWindowText(m_hWnd, m_pszFrameRate);
 }

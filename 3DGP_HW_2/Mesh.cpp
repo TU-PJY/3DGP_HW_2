@@ -136,8 +136,7 @@ void CMesh::LoadMeshFromFile(ID3D12Device* pd3dDevice, ID3D12GraphicsCommandList
 }
 
 
-void CMesh::ReleaseUploadBuffers()
-{
+void CMesh::ReleaseUploadBuffers() {
 	if (m_pd3dPositionUploadBuffer) m_pd3dPositionUploadBuffer->Release();
 	if (m_pd3dNormalUploadBuffer) m_pd3dNormalUploadBuffer->Release();
 	if (m_pd3dTextureCoordUploadBuffer) m_pd3dTextureCoordUploadBuffer->Release();
@@ -149,8 +148,7 @@ void CMesh::ReleaseUploadBuffers()
 	m_pd3dIndexUploadBuffer = NULL;
 };
 
-void CMesh::Render(ID3D12GraphicsCommandList* pd3dCommandList)
-{
+void CMesh::Render(ID3D12GraphicsCommandList* pd3dCommandList) {
 	pd3dCommandList->IASetPrimitiveTopology(m_d3dPrimitiveTopology);
 	pd3dCommandList->IASetVertexBuffers(m_nSlot, m_nVertexBufferViews, m_pd3dVertexBufferViews);
 	if (m_pd3dIndexBuffer)
